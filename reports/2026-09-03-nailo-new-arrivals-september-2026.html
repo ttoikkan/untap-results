@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="untap-report-title" content="Nailo New Arrivals - September 2026">
+  <meta name="untap-report-date" content="2026-09-03">
+  <meta name="untap-total-beers" content="19">
+  <meta name="untap-confirmed-count" content="15">
+  <meta name="untap-review-count" content="4">
+  <title>Nailo New Arrivals - September 2026</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { width: min(900px, 100%); margin: 0 auto; padding: 24px 16px 48px; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    h2 { margin-top: 32px; }
+    h3, h4, p { margin-top: 0; }
+    .summary { margin: 0; opacity: .72; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .beer-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 14px; align-items: start; }
+    .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
+    .beer-link { color: LinkText; text-decoration-thickness: .08em; text-underline-offset: .15em; }
+    .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .review-group { padding: 16px; }
+    .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .review-heading h3 { margin-bottom: 8px; }
+    .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
+    .candidate-list { margin-top: 12px; }
+    .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
+    .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
+    @media (max-width: 520px) {
+      main { padding: 18px 12px 36px; }
+      .beer-card { grid-template-columns: 54px 1fr; }
+      .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Nailo New Arrivals - September 2026</h1>
+      <p class="summary">19 beers · 15 confirmed · 4 ambiguous</p>
+    </header>
+
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="farmhouse ale" checked><span>Farmhouse Ale</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="lager" checked><span>Lager</span></label><label class="style-chip" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="pilsner" checked><span>Pilsner</span></label><label class="style-chip" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label></div></fieldset>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Results</h2>
+      <div class="results-list">
+            <article class="review-group">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>Sante Adairius Rustic Ales Each a Little Token</h3>
+              </div>
+              <p class="review-reason">Multiple 5.2% variants found</p>
+              <ol class="candidate-list">
+                <li class="candidate-card" data-style-group="farmhouse ale">
+                  <div class="candidate-score">Match 1.000</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-each-a-little-token/4558800" target="_blank" rel="noopener noreferrer">Each A Little Token</a></h4>
+                    <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 5.2% <span aria-hidden="true">·</span> Farmhouse Ale - Grisette</p>
+                    <p class="ratings-count">Rating 4.38 · 805 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="farmhouse ale">
+                  <div class="candidate-score">Match 0.946</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-each-a-little-token-batch-2/6392889" target="_blank" rel="noopener noreferrer">Each A Little Token (Batch 2)</a></h4>
+                    <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 5.2% <span aria-hidden="true">·</span> Farmhouse Ale - Grisette</p>
+                    <p class="ratings-count">Rating 4.32 · 215 ratings</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="review-group">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>Xül PB&amp;J Mixtape</h3>
+              </div>
+              <p class="review-reason">Multiple 6.5% variants found</p>
+              <ol class="candidate-list">
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 1.000</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape/5197743" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.37 · 23,464 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.938</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-peach/6202864" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Peach</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.26 · 529 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.929</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-cherry/6638982" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Cherry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.21 · 364 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.908</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-blueberry/5939083" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Blueberry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.42 · 735 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.908</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-raspberry/5431993" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Raspberry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.29 · 1,406 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.902</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-blackberry/5699566" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Blackberry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.29 · 1,108 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.902</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-strawberry/5373938" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Strawberry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.37 · 2,048 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.896</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-marshmallow/6229679" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Marshmallow</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.19 · 114 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.870</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-fluff-strawberry/6825483" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape Fluff: Strawberry</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.33 · 225 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="sour">
+                  <div class="candidate-score">Match 0.870</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/xul-beer-company-pb-and-j-mixtape-orange-marmalade/6407262" target="_blank" rel="noopener noreferrer">PB&amp;J Mixtape: Orange Marmalade</a></h4>
+                    <p class="meta">Xül Beer Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.19 · 264 ratings</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="beer-card" data-style-group="farmhouse ale">
+              <div class="rating-badge">4.36</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-silent-spaces/4662558" target="_blank" rel="noopener noreferrer">Silent Spaces</a></h3>
+                <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 6.3% <span aria-hidden="true">·</span> Farmhouse Ale - Saison</p>
+                <p class="ratings-count">618 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.32</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-couler-sous-les-flots/6747129" target="_blank" rel="noopener noreferrer">Couler Sous Les Flots</a></h3>
+                <p class="meta">Messorem <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">407 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.27</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brewskey-pesee/6757839" target="_blank" rel="noopener noreferrer">PESÉE</a></h3>
+                <p class="meta">BreWskey <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double</p>
+                <p class="ratings-count">190 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.26</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brewskey-covenant-sup/6771621" target="_blank" rel="noopener noreferrer">COVENANT SUP</a></h3>
+                <p class="meta">BreWskey <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="ratings-count">213 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.26</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-demoliri-0032/6756682" target="_blank" rel="noopener noreferrer">Demoliri 0032</a></h3>
+                <p class="meta">Messorem <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="ratings-count">420 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.22</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/all-my-friends-beer-co-bootleg/6772430" target="_blank" rel="noopener noreferrer">Bootleg</a></h3>
+                <p class="meta">All My Friends Beer Co. <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="ratings-count">190 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.20</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/fine-balance-brewing-crossing-dipa-rock-city/6755347" target="_blank" rel="noopener noreferrer">Crossing</a></h3>
+                <p class="meta">Fine Balance Brewing <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">168 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.19</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brewskey-cerebral/6746627" target="_blank" rel="noopener noreferrer">CÉRÉBRAL</a></h3>
+                <p class="meta">BreWskey <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">217 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.14</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/all-my-friends-beer-co-hypnosis-2026/6737329" target="_blank" rel="noopener noreferrer">Hypnosis (2026)</a></h3>
+                <p class="meta">All My Friends Beer Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="ratings-count">81 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">4.12</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-du-bas-canada-elixir-herman/6756041" target="_blank" rel="noopener noreferrer">Élixir - Herman</a></h3>
+                <p class="meta">Brasserie du Bas-Canada <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="ratings-count">394 ratings</p>
+              </div>
+            </article>
+            
+            <article class="review-group">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>Sante Adairius Rustic Ales Tomorrow, Today</h3>
+              </div>
+              <p class="review-reason">Multiple 7.4% variants found</p>
+              <ol class="candidate-list">
+                <li class="candidate-card" data-style-group="ipa">
+                  <div class="candidate-score">Match 1.000</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-tomorrow-today/1975204" target="_blank" rel="noopener noreferrer">Tomorrow, Today</a></h4>
+                    <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 7.4% <span aria-hidden="true">·</span> IPA - American</p>
+                    <p class="ratings-count">Rating 4.10 · 8,147 ratings</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card" data-style-group="ipa">
+                  <div class="candidate-score">Match 0.836</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-tomorrow-today-double-dry-hopped-w-centennial/5527481" target="_blank" rel="noopener noreferrer">Tomorrow, Today (Double Dry Hopped W Centennial)</a></h4>
+                    <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 7.4% <span aria-hidden="true">·</span> IPA - American</p>
+                    <p class="ratings-count">Rating 0.00 · 5 ratings</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="beer-card" data-style-group="lager">
+              <div class="rating-badge">4.06</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-polotmave-de-foudre/6756720" target="_blank" rel="noopener noreferrer">Polotmavé De Foudre</a></h3>
+                <p class="meta">Messorem <span aria-hidden="true">·</span> 5.2% <span aria-hidden="true">·</span> Lager - Polotmavé (Czech Amber)</p>
+                <p class="ratings-count">119 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">3.98</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-sir-john-brewing-co-dans-la-foret-des-geants/6755814" target="_blank" rel="noopener noreferrer">Dans La Forêt Des Géants</a></h3>
+                <p class="meta">Brasserie Sir John Brewing Co. <span aria-hidden="true">·</span> 7.3% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="ratings-count">135 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="pilsner">
+              <div class="rating-badge">3.93</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-elevated-life/4960045" target="_blank" rel="noopener noreferrer">Elevated Life</a></h3>
+                <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 3% <span aria-hidden="true">·</span> Pilsner - German</p>
+                <p class="ratings-count">316 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">3.93</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/sante-adairius-rustic-ales-pivots-and-dials/6770033" target="_blank" rel="noopener noreferrer">Pivots And Dials</a></h3>
+                <p class="meta">Sante Adairius Rustic Ales <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="ratings-count">129 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card" data-style-group="ipa">
+              <div class="rating-badge">3.90</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-sir-john-brewing-co-ipa-sans-tomate/6755813" target="_blank" rel="noopener noreferrer">IPA Sans Tomate</a></h3>
+                <p class="meta">Brasserie Sir John Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="ratings-count">316 ratings</p>
+              </div>
+            </article>
+            
+            <article class="review-group">
+              <div class="review-heading">
+                <span class="status-pill">Failed</span>
+                <h3>Hudson Valley On the Manner of Addressing Clouds</h3>
+              </div>
+              <p class="review-reason">No matching beer found</p>
+              <ol class="candidate-list"><p class="empty">No linked candidate was available.</p></ol>
+            </article>
+            </div>
+    </section>
+  </main>
+  <script>
+    (function () {
+      const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
+      if (!filters.length) return;
+
+      const styledCards = Array.from(document.querySelectorAll('[data-style-group]'));
+      const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
+
+      function applyStyleFilters() {
+        const enabled = new Set(
+          filters.filter((filter) => filter.checked).map((filter) => filter.value)
+        );
+
+        styledCards.forEach((card) => {
+          card.hidden = !enabled.has(card.dataset.styleGroup);
+        });
+
+        reviewGroups.forEach((group) => {
+          const candidates = Array.from(group.querySelectorAll('.candidate-card'));
+          if (!candidates.length) return;
+          group.hidden = candidates.every((candidate) => candidate.hidden);
+        });
+      }
+
+      filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      applyStyleFilters();
+    })();
+  </script>
+</body>
+</html>
