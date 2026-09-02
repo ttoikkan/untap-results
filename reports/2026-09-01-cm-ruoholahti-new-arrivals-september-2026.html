@@ -19,10 +19,17 @@
     h2 { margin-top: 32px; }
     h3, h4, p { margin-top: 0; }
     .summary { margin: 0; opacity: .72; }
-    .style-filters { margin: 22px 0 8px; padding: 12px 14px 14px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 12px; }
-    .style-filters legend { padding: 0 5px; font-weight: 700; }
-    .style-option { display: inline-flex; gap: 6px; align-items: center; margin: 4px 16px 4px 0; cursor: pointer; }
-    .style-option input { margin: 0; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
     [hidden] { display: none !important; }
     .beer-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
     .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
@@ -39,6 +46,9 @@
     .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
     .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
     .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
     @media (max-width: 520px) {
       main { padding: 18px 12px 36px; }
       .beer-card { grid-template-columns: 54px 1fr; }
@@ -53,7 +63,7 @@
       <p class="summary">39 beers · 38 confirmed · 1 need review</p>
     </header>
 
-    <fieldset class="style-filters"><legend>Styles</legend><label class="style-option" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="farmhouse ale" checked> Farmhouse Ale</label><label class="style-option" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="ipa" checked> IPA</label><label class="style-option" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="lager" checked> Lager</label><label class="style-option" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="pale ale" checked> Pale Ale</label><label class="style-option" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="pilsner" checked> Pilsner</label><label class="style-option" for="style-filter-5"><input id="style-filter-5" type="checkbox" data-style-filter value="sour" checked> Sour</label></fieldset>
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="farmhouse ale" checked><span>Farmhouse Ale</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="lager" checked><span>Lager</span></label><label class="style-chip" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="pale ale" checked><span>Pale Ale</span></label><label class="style-chip" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="pilsner" checked><span>Pilsner</span></label><label class="style-chip" for="style-filter-5"><input id="style-filter-5" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label></div></fieldset>
 
     <section aria-labelledby="confirmed-heading">
       <h2 id="confirmed-heading">Confirmed</h2>
@@ -63,7 +73,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/transcend-beer-crafters-bahama-bliss/4079581" target="_blank" rel="noopener noreferrer">Bahama Bliss</a></h3>
                 <p class="meta">Transcend Beer Crafters <span aria-hidden="true">·</span> 6% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
-                <p class="ratings-count">222 ratings</p>
+                <p class="ratings-count">223 ratings</p>
               </div>
             </li>
             
@@ -99,7 +109,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/le-ketch-capitaine-iteration-le-ketch-x-fallside/6745257" target="_blank" rel="noopener noreferrer">Capitaine Iteration - Le Ketch X Fallside</a></h3>
                 <p class="meta">Le Ketch <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">189 ratings</p>
+                <p class="ratings-count">190 ratings</p>
               </div>
             </li>
             
@@ -108,7 +118,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-couler-sous-les-flots/6747129" target="_blank" rel="noopener noreferrer">Couler Sous Les Flots</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">406 ratings</p>
+                <p class="ratings-count">407 ratings</p>
               </div>
             </li>
             
@@ -117,7 +127,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-diabolical-lineage/6772270" target="_blank" rel="noopener noreferrer">Diabolical Lineage</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 5.8% <span aria-hidden="true">·</span> Pale Ale - New England / Hazy</p>
-                <p class="ratings-count">716 ratings</p>
+                <p class="ratings-count">717 ratings</p>
               </div>
             </li>
             
@@ -126,7 +136,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-fazy-2026/6736235" target="_blank" rel="noopener noreferrer">Fazy (2026)</a></h3>
                 <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">109 ratings</p>
+                <p class="ratings-count">110 ratings</p>
               </div>
             </li>
             
@@ -135,7 +145,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-hydra-blackberry-pineapple-coconut/3176145" target="_blank" rel="noopener noreferrer">Hydra | Blackberry + Pineapple + Coconut</a></h3>
                 <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
-                <p class="ratings-count">443 ratings</p>
+                <p class="ratings-count">445 ratings</p>
               </div>
             </li>
             
@@ -153,7 +163,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-demoliri-0031/6756680" target="_blank" rel="noopener noreferrer">Demoliri 0031</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">465 ratings</p>
+                <p class="ratings-count">468 ratings</p>
               </div>
             </li>
             
@@ -162,7 +172,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-demoliri-0032/6756682" target="_blank" rel="noopener noreferrer">Demoliri 0032</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">419 ratings</p>
+                <p class="ratings-count">420 ratings</p>
               </div>
             </li>
             
@@ -171,7 +181,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-commutatio-bad-bones/6756733" target="_blank" rel="noopener noreferrer">Commutatio : Bad Bones</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">692 ratings</p>
+                <p class="ratings-count">696 ratings</p>
               </div>
             </li>
             
@@ -198,7 +208,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-persephone/5210080" target="_blank" rel="noopener noreferrer">Persephone</a></h3>
                 <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">2,163 ratings</p>
+                <p class="ratings-count">2,164 ratings</p>
               </div>
             </li>
             
@@ -212,11 +222,11 @@
             </li>
             
             <li class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.21</div>
+              <div class="rating-badge">4.22</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/all-my-friends-beer-co-bootleg/6772430" target="_blank" rel="noopener noreferrer">Bootleg</a></h3>
                 <p class="meta">All My Friends Beer Co. <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">187 ratings</p>
+                <p class="ratings-count">190 ratings</p>
               </div>
             </li>
             
@@ -225,7 +235,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-vue-du-bureau/6747124" target="_blank" rel="noopener noreferrer">Vue Du Bureau</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">342 ratings</p>
+                <p class="ratings-count">346 ratings</p>
               </div>
             </li>
             
@@ -234,7 +244,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/tired-hands-brewing-company-pungetopia/6730114" target="_blank" rel="noopener noreferrer">Pungetopia</a></h3>
                 <p class="meta">Tired Hands Brewing Company <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">379 ratings</p>
+                <p class="ratings-count">380 ratings</p>
               </div>
             </li>
             
@@ -243,16 +253,16 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-through-the-glass-2026/6751539" target="_blank" rel="noopener noreferrer">Through the Glass (2026)</a></h3>
                 <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">166 ratings</p>
+                <p class="ratings-count">168 ratings</p>
               </div>
             </li>
             
             <li class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.18</div>
+              <div class="rating-badge">4.19</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-glen-haffy-2026/6787665" target="_blank" rel="noopener noreferrer">Glen Haffy (2026)</a></h3>
                 <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">170 ratings</p>
+                <p class="ratings-count">172 ratings</p>
               </div>
             </li>
             
@@ -261,7 +271,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-the-staff-iii-gold-moon-edition/6766576" target="_blank" rel="noopener noreferrer">The Staff III (Gold Moon Edition)</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 6.7% <span aria-hidden="true">·</span> IPA - New Zealand</p>
-                <p class="ratings-count">413 ratings</p>
+                <p class="ratings-count">416 ratings</p>
               </div>
             </li>
             
@@ -270,7 +280,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-commutatio-popihn/6785246" target="_blank" rel="noopener noreferrer">Commutatio : Popihn</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">346 ratings</p>
+                <p class="ratings-count">349 ratings</p>
               </div>
             </li>
             
@@ -279,7 +289,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-commutatio-prizm/6785251" target="_blank" rel="noopener noreferrer">Commutatio : Prizm</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">361 ratings</p>
+                <p class="ratings-count">367 ratings</p>
               </div>
             </li>
             
@@ -297,7 +307,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-sacrilegio/6781625" target="_blank" rel="noopener noreferrer">Sacrilegio</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 6.66% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">415 ratings</p>
+                <p class="ratings-count">419 ratings</p>
               </div>
             </li>
             
@@ -333,7 +343,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/hop-butcher-for-the-world-the-day-we-floated/6735089" target="_blank" rel="noopener noreferrer">The Day We Floated</a></h3>
                 <p class="meta">Hop Butcher For The World <span aria-hidden="true">·</span> 8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">1,338 ratings</p>
+                <p class="ratings-count">1,342 ratings</p>
               </div>
             </li>
             
@@ -342,7 +352,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/wax-wings-brewing-company-eight-streamers/6787519" target="_blank" rel="noopener noreferrer">Eight Streamers</a></h3>
                 <p class="meta">Wax Wings Brewing Company <span aria-hidden="true">·</span> 7.2% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">264 ratings</p>
+                <p class="ratings-count">268 ratings</p>
               </div>
             </li>
             
@@ -351,7 +361,7 @@
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brasserie-du-bas-canada-elixir-herman/6756041" target="_blank" rel="noopener noreferrer">Élixir - Herman</a></h3>
                 <p class="meta">Brasserie du Bas-Canada <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">389 ratings</p>
+                <p class="ratings-count">394 ratings</p>
               </div>
             </li>
             
@@ -374,11 +384,11 @@
             </li>
             
             <li class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">3.94</div>
+              <div class="rating-badge">3.95</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/van-ewing-flock-together/6754234" target="_blank" rel="noopener noreferrer">Flock Together</a></h3>
                 <p class="meta">Van Ewing <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">176 ratings</p>
+                <p class="ratings-count">177 ratings</p>
               </div>
             </li>
             
