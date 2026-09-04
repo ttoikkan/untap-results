@@ -4,10 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="untap-report-title" content="Pien New Arrivals - September 2026">
-  <meta name="untap-report-date" content="2026-09-02">
+  <meta name="untap-report-date" content="2026-09-04">
   <meta name="untap-total-beers" content="31">
   <meta name="untap-confirmed-count" content="29">
   <meta name="untap-review-count" content="2">
+  <meta name="untap-ambiguous-count" content="2">
+  <meta name="untap-failed-count" content="0">
   <title>Pien New Arrivals - September 2026</title>
   <style>
     :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -20,6 +22,8 @@
     h3, h4, p { margin-top: 0; }
     .summary { margin: 0; opacity: .72; }
     .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .status-filters { margin-bottom: 0; }
+    .status-filters + .style-filters { margin-top: 12px; }
     .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
     .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .style-chip { position: relative; cursor: pointer; }
@@ -34,16 +38,29 @@
     .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
     .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
     .beer-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 14px; align-items: start; }
+    .beer-card.has-label { grid-template-columns: 72px 64px 1fr; }
+    .beer-label { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; background: color-mix(in srgb, Canvas 88%, CanvasText 12%); }
+    .label-preview-button { display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: zoom-in; }
+    .label-preview-button:hover { outline: 2px solid LinkText; outline-offset: 2px; }
+    .label-preview-button:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
     .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
     .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
     .beer-link { color: LinkText; text-decoration-thickness: .08em; text-underline-offset: .15em; }
     .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .production-warning { margin: 8px 0 0; font-weight: 650; line-height: 1.35; }
     .review-group { padding: 16px; }
     .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
     .review-heading h3 { margin-bottom: 8px; }
     .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
     .candidate-list { margin-top: 12px; }
     .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
+    .candidate-card.has-label { grid-template-columns: 56px 92px 1fr; }
+    .candidate-card .beer-label { width: 56px; height: 56px; border-radius: 8px; }
+    .candidate-card .label-preview-button { border-radius: 8px; }
+    .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
+    .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
+    .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
+    .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
     .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
     .empty { opacity: .65; font-style: italic; }
     @media (prefers-reduced-motion: reduce) {
@@ -52,7 +69,13 @@
     @media (max-width: 520px) {
       main { padding: 18px 12px 36px; }
       .beer-card { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
+      .beer-card.has-label .beer-label { width: 54px; height: 54px; }
       .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+      .candidate-card.has-label { grid-template-columns: 48px 1fr; }
+      .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
+      .candidate-card.has-label .beer-label { width: 48px; height: 48px; }
     }
   </style>
 </head>
@@ -63,264 +86,296 @@
       <p class="summary">31 beers · 29 confirmed · 2 ambiguous</p>
     </header>
 
+    <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
     <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="barleywine" checked><span>Barleywine</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="lager" checked><span>Lager</span></label><label class="style-chip" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="pilsner" checked><span>Pilsner</span></label><label class="style-chip" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label><label class="style-chip" for="style-filter-5"><input id="style-filter-5" type="checkbox" data-style-filter value="stout" checked><span>Stout</span></label></div></fieldset>
 
     <section aria-labelledby="results-heading">
       <h2 id="results-heading">Results</h2>
       <div class="results-list">
-            <article class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.53</div>
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Los Vigilantes Oscuros label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">4.51</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-los-vigilantes-oscuros/6785258" target="_blank" rel="noopener noreferrer">Los Vigilantes Oscuros</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 10.3% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
-                <p class="ratings-count">553 ratings</p>
+                <p class="ratings-count">567 ratings</p>
               </div>
             </article>
             
-            <article class="review-group">
+            <article class="review-group" data-status="ambiguous">
               <div class="review-heading">
                 <span class="status-pill">Ambiguous</span>
                 <h3>Fremont Bourbon Barrel Aged Dark Star: Coffee (2015)</h3>
               </div>
               <p class="review-reason">Multiple candidates include &#x27;Bourbon Barrel Aged Dark Star – Coffee Edition (2015)&#x27;, &#x27;Bourbon Barrel Aged Dark Star (2015)&#x27;</p>
               <ol class="candidate-list">
-                <li class="candidate-card" data-style-group="stout">
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-1508_c8b6c.jpeg" alt="Bourbon Barrel Aged Dark Star – Coffee Edition (2015) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
                   <div class="candidate-score">Match 0.972</div>
                   <div>
                     <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-bourbon-barrel-aged-dark-star-coffee-edition-2015/1274640" target="_blank" rel="noopener noreferrer">Bourbon Barrel Aged Dark Star – Coffee Edition (2015)</a></h4>
                     <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 14.5% <span aria-hidden="true">·</span> Stout - Imperial / Double Oatmeal</p>
                     <p class="ratings-count">Rating 4.50 · 3,643 ratings</p>
+                    <p class="production-warning">Listed as out of production on Untappd</p>
                   </div>
                 </li>
                 
-                <li class="candidate-card" data-style-group="stout">
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-1257424_cc43c_hd.jpeg" aria-label="View larger Bourbon Barrel Aged Dark Star (2015) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-1257424_dcd62_sm.jpeg" alt="Bourbon Barrel Aged Dark Star (2015) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
                   <div class="candidate-score">Match 0.838</div>
                   <div>
                     <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-bourbon-barrel-aged-dark-star-2015/1257424" target="_blank" rel="noopener noreferrer">Bourbon Barrel Aged Dark Star (2015)</a></h4>
                     <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 14.5% <span aria-hidden="true">·</span> Stout - Imperial / Double Oatmeal</p>
                     <p class="ratings-count">Rating 4.45 · 7,453 ratings</p>
+                    <p class="production-warning">Listed as out of production on Untappd</p>
                   </div>
                 </li>
                 </ol>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6744947_18ff5_hd.jpeg" aria-label="View larger African Wild Dog label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6744947_18ff5_sm.jpeg" alt="African Wild Dog label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.47</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-african-wild-dog/6744947" target="_blank" rel="noopener noreferrer">African Wild Dog</a></h3>
                 <p class="meta">Lolev Beer <span aria-hidden="true">·</span> 8.8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">651 ratings</p>
+                <p class="ratings-count">657 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Nobosuma label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
               <div class="rating-badge">4.46</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-nobosuma/6776778" target="_blank" rel="noopener noreferrer">Nobosuma</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 12.2% <span aria-hidden="true">·</span> IPA - Quadruple</p>
-                <p class="ratings-count">757 ratings</p>
+                <p class="ratings-count">773 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.46</div>
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776487_d3b0a_hd.jpeg" aria-label="View larger Temporalis #0061 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776487_d3b0a_sm.jpeg" alt="Temporalis #0061 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.45</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-temporalis-0061/6776487" target="_blank" rel="noopener noreferrer">Temporalis #0061</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 10% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
-                <p class="ratings-count">617 ratings</p>
+                <p class="ratings-count">661 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5734564_2cf45_hd.jpeg" aria-label="View larger Infinitum label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5734564_2cf45_sm.jpeg" alt="Infinitum label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.44</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-infinitum/5734564" target="_blank" rel="noopener noreferrer">Infinitum</a></h3>
                 <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 10.3% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
-                <p class="ratings-count">2,927 ratings</p>
+                <p class="ratings-count">2,931 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="stout">
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-80116_e0704.jpeg" alt="Buckley Reserve #2 (2025) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
               <div class="rating-badge">4.42</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/transient-artisan-ales-buckley-reserve-2-2025/6270452" target="_blank" rel="noopener noreferrer">Buckley Reserve #2 (2025)</a></h3>
                 <p class="meta">Transient Artisan Ales <span aria-hidden="true">·</span> 15.5% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
-                <p class="ratings-count">296 ratings</p>
+                <p class="ratings-count">297 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.38</div>
-              <div class="beer-content">
-                <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-july-dipa-2026/6757712" target="_blank" rel="noopener noreferrer">July DIPA (2026)</a></h3>
-                <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 8.2% <span aria-hidden="true">·</span> IPA - Imperial / Double</p>
-                <p class="ratings-count">136 ratings</p>
-              </div>
-            </article>
-            
-            <article class="beer-card" data-style-group="barleywine">
+            <article class="beer-card has-label" data-status="ok" data-style-group="barleywine">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6686355_2dd31_hd.jpeg" aria-label="View larger Brew 9000 (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6686355_58261_sm.jpeg" alt="Brew 9000 (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.38</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-brew-9000-2026/6686355" target="_blank" rel="noopener noreferrer">Brew 9000 (2026)</a></h3>
                 <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 14.7% <span aria-hidden="true">·</span> Barleywine - English</p>
-                <p class="ratings-count">441 ratings</p>
+                <p class="ratings-count">449 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6757340_d9f6e_hd.jpeg" aria-label="View larger Super Saturated label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6757340_d9f6e_sm.jpeg" alt="Super Saturated label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.37</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/autodidact-beer-super-saturated/6757340" target="_blank" rel="noopener noreferrer">Super Saturated</a></h3>
                 <p class="meta">Autodidact Beer <span aria-hidden="true">·</span> 8.1% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">464 ratings</p>
+                <p class="ratings-count">488 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6757712_6fb4c_hd.jpeg" aria-label="View larger July DIPA (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6757712_d1bd3_sm.jpeg" alt="July DIPA (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.37</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-july-dipa-2026/6757712" target="_blank" rel="noopener noreferrer">July DIPA (2026)</a></h3>
+                <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 8.2% <span aria-hidden="true">·</span> IPA - Imperial / Double</p>
+                <p class="ratings-count">143 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776439_40d3e_hd.jpeg" aria-label="View larger Snow Leopard label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776439_40d3e_sm.jpeg" alt="Snow Leopard label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.36</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-snow-leopard/6776439" target="_blank" rel="noopener noreferrer">Snow Leopard</a></h3>
                 <p class="meta">Lolev Beer <span aria-hidden="true">·</span> 8.7% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">605 ratings</p>
+                <p class="ratings-count">613 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="sour">
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4195283_37cff_hd.jpeg" aria-label="View larger Gemini | Bomb Pop label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4195283_052b3_sm.jpeg" alt="Gemini | Bomb Pop label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.33</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-gemini-bomb-pop/4195283" target="_blank" rel="noopener noreferrer">Gemini | Bomb Pop</a></h3>
                 <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Fruited</p>
-                <p class="ratings-count">3,013 ratings</p>
+                <p class="ratings-count">3,015 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756708_664df_hd.jpeg" aria-label="View larger Citraplus11 XTRM TURBO label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756708_664df_sm.jpeg" alt="Citraplus11 XTRM TURBO label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.32</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-citraplus11-xtrm-turbo/6756708" target="_blank" rel="noopener noreferrer">Citraplus11 XTRM TURBO</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6.6% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">349 ratings</p>
+                <p class="ratings-count">358 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="sour">
-              <div class="rating-badge">4.30</div>
-              <div class="beer-content">
-                <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-hydra-blackberry-pineapple-coconut/3176145" target="_blank" rel="noopener noreferrer">Hydra | Blackberry + Pineapple + Coconut</a></h3>
-                <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
-                <p class="ratings-count">445 ratings</p>
-              </div>
-            </article>
-            
-            <article class="review-group">
+            <article class="review-group" data-status="ambiguous">
               <div class="review-heading">
                 <span class="status-pill">Ambiguous</span>
                 <h3>Transient Life for a Puppy Shouldn&#x27;t Be So Ruff (2025)</h3>
               </div>
               <p class="review-reason">Top candidates are too close: &#x27;Life For A Puppy Shouldn’t Be So Ruff (2025)&#x27; (1.000) vs &#x27;Swirl Life For A Puppy Shouldn&#x27;t Be So Ruff (2025)&#x27; (0.979)</p>
               <ol class="candidate-list">
-                <li class="candidate-card" data-style-group="stout">
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-80116_e0704.jpeg" alt="Life For A Puppy Shouldn’t Be So Ruff (2025) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
                   <div class="candidate-score">Match 1.000</div>
                   <div>
                     <h4><a class="beer-link" href="https://untappd.com/b/transient-artisan-ales-life-for-a-puppy-shouldn-t-be-so-ruff-2025/6428925" target="_blank" rel="noopener noreferrer">Life For A Puppy Shouldn’t Be So Ruff (2025)</a></h4>
                     <p class="meta">Transient Artisan Ales <span aria-hidden="true">·</span> 15% <span aria-hidden="true">·</span> Stout - Imperial / Double Pastry</p>
                     <p class="ratings-count">Rating 4.30 · 41 ratings</p>
+                    
                   </div>
                 </li>
                 
-                <li class="candidate-card" data-style-group="stout">
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-80116_e0704.jpeg" alt="Swirl Life For A Puppy Shouldn&#x27;t Be So Ruff (2025) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
                   <div class="candidate-score">Match 0.979</div>
                   <div>
                     <h4><a class="beer-link" href="https://untappd.com/b/transient-artisan-ales-swirl-life-for-a-puppy-shouldn-t-be-so-ruff-2025/6428935" target="_blank" rel="noopener noreferrer">Swirl Life For A Puppy Shouldn&#x27;t Be So Ruff (2025)</a></h4>
                     <p class="meta">Transient Artisan Ales <span aria-hidden="true">·</span> 15% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
                     <p class="ratings-count">Rating 4.26 · 69 ratings</p>
+                    
                   </div>
                 </li>
                 </ol>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-3176145_ac015_hd.jpeg" aria-label="View larger Hydra | Blackberry + Pineapple + Coconut label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-3176145_eb6ef_sm.jpeg" alt="Hydra | Blackberry + Pineapple + Coconut label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.29</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-hydra-blackberry-pineapple-coconut/3176145" target="_blank" rel="noopener noreferrer">Hydra | Blackberry + Pineapple + Coconut</a></h3>
+                <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
+                <p class="ratings-count">453 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756725_88576_hd.jpeg" aria-label="View larger Destructio 0010 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756725_88576_sm.jpeg" alt="Destructio 0010 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.27</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-destructio-0010/6756725" target="_blank" rel="noopener noreferrer">Destructio 0010</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 8.5% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">496 ratings</p>
+                <p class="ratings-count">519 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6771621_d1a62_hd.jpeg" aria-label="View larger COVENANT SUP label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6771621_d1a62_sm.jpeg" alt="COVENANT SUP label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.26</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brewskey-covenant-sup/6771621" target="_blank" rel="noopener noreferrer">COVENANT SUP</a></h3>
                 <p class="meta">BreWskey <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">213 ratings</p>
+                <p class="ratings-count">216 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756682_a79bc_hd.jpeg" aria-label="View larger Demoliri 0032 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756682_a79bc_sm.jpeg" alt="Demoliri 0032 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.26</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-demoliri-0032/6756682" target="_blank" rel="noopener noreferrer">Demoliri 0032</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">420 ratings</p>
+                <p class="ratings-count">439 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756733_b9f35_hd.jpeg" aria-label="View larger Commutatio : Bad Bones label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756733_b9f35_sm.jpeg" alt="Commutatio : Bad Bones label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.26</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-commutatio-bad-bones/6756733" target="_blank" rel="noopener noreferrer">Commutatio : Bad Bones</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="ratings-count">696 ratings</p>
+                <p class="ratings-count">705 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
-              <div class="rating-badge">4.25</div>
-              <div class="beer-content">
-                <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-pop-pop-2026/6794932" target="_blank" rel="noopener noreferrer">Pop Pop (2026)</a></h3>
-                <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">14 ratings</p>
-              </div>
-            </article>
-            
-            <article class="beer-card" data-style-group="stout">
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6765419_ad383_hd.jpeg" aria-label="View larger Bestowed - Maple Coffee label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6765419_ad383_sm.jpeg" alt="Bestowed - Maple Coffee label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.24</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/third-moon-brewing-company-bestowed-maple-coffee/6765419" target="_blank" rel="noopener noreferrer">Bestowed - Maple Coffee</a></h3>
                 <p class="meta">Third Moon Brewing Company <span aria-hidden="true">·</span> 11.9% <span aria-hidden="true">·</span> Stout - Imperial / Double Pastry</p>
-                <p class="ratings-count">300 ratings</p>
+                <p class="ratings-count">302 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-330375_ead90.jpeg" alt="Pop Pop (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">4.23</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-pop-pop-2026/6794932" target="_blank" rel="noopener noreferrer">Pop Pop (2026)</a></h3>
+                <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="ratings-count">19 ratings</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6755881_fb622_hd.jpeg" aria-label="View larger Double Fracture label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6755881_fb622_sm.jpeg" alt="Double Fracture label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.21</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/brasserie-sir-john-brewing-co-double-fracture/6755881" target="_blank" rel="noopener noreferrer">Double Fracture</a></h3>
                 <p class="meta">Brasserie Sir John Brewing Co. <span aria-hidden="true">·</span> 8.4% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
-                <p class="ratings-count">421 ratings</p>
+                <p class="ratings-count">423 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6751539_fcaea_hd.jpeg" aria-label="View larger Through the Glass (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6751539_fcaea_sm.jpeg" alt="Through the Glass (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.20</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/badlands-brewing-company-through-the-glass-2026/6751539" target="_blank" rel="noopener noreferrer">Through the Glass (2026)</a></h3>
                 <p class="meta">Badlands Brewing Company <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">168 ratings</p>
+                <p class="ratings-count">171 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="sour">
-              <div class="rating-badge">4.15</div>
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6415480_b48e9_hd.jpeg" aria-label="View larger Bistro Mango Pineapple Lime Habanero label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6415480_b48e9_sm.jpeg" alt="Bistro Mango Pineapple Lime Habanero label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.16</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/energy-city-brewing-bistro-mango-pineapple-lime-habanero/6415480" target="_blank" rel="noopener noreferrer">Bistro Mango Pineapple Lime Habanero</a></h3>
                 <p class="meta">Energy City Brewing <span aria-hidden="true">·</span> 6.5% <span aria-hidden="true">·</span> Sour - Fruited Berliner Weisse</p>
-                <p class="ratings-count">288 ratings</p>
+                <p class="ratings-count">292 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6755341_0bc76_hd.jpeg" aria-label="View larger Junction label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6755341_0bc76_sm.jpeg" alt="Junction label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.14</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/fine-balance-brewing-junction-ipa-bad-bones/6755341" target="_blank" rel="noopener noreferrer">Junction</a></h3>
@@ -329,16 +384,18 @@
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="sour">
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4047318_5532f_hd.jpeg" aria-label="View larger Watermelon Cotton Candy Sour label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4047318_d434a_sm.jpeg" alt="Watermelon Cotton Candy Sour label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">4.06</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/weldwerks-brewing-co-watermelon-cotton-candy-sour/4047318" target="_blank" rel="noopener noreferrer">Watermelon Cotton Candy Sour</a></h3>
                 <p class="meta">WeldWerks Brewing Co. <span aria-hidden="true">·</span> 4.7% <span aria-hidden="true">·</span> Sour - Fruited</p>
-                <p class="ratings-count">5,286 ratings</p>
+                <p class="ratings-count">5,287 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6746653_d6777_hd.jpeg" aria-label="View larger Règne label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6746653_d6777_sm.jpeg" alt="Règne label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">3.96</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/noctem-artisans-brasseurs-regne/6746653" target="_blank" rel="noopener noreferrer">Règne</a></h3>
@@ -347,50 +404,59 @@
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756801_ecbb2_hd.jpeg" aria-label="View larger Tumulus 2 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756801_ecbb2_sm.jpeg" alt="Tumulus 2 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">3.90</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/messorem-tumulus-2/6756801" target="_blank" rel="noopener noreferrer">Tumulus 2</a></h3>
                 <p class="meta">Messorem <span aria-hidden="true">·</span> 6% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">194 ratings</p>
+                <p class="ratings-count">195 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="pilsner">
-              <div class="rating-badge">3.86</div>
+            <article class="beer-card has-label" data-status="ok" data-style-group="pilsner">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-1508_c8b6c.jpeg" alt="Colorado Callin’ label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">3.85</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-colorado-callin/6741744" target="_blank" rel="noopener noreferrer">Colorado Callin’</a></h3>
                 <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 5.5% <span aria-hidden="true">·</span> Pilsner - American</p>
-                <p class="ratings-count">327 ratings</p>
+                <p class="ratings-count">331 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="lager">
+            <article class="beer-card has-label" data-status="ok" data-style-group="lager">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5352553_a304e_hd.jpeg" aria-label="View larger El Gato Lime - Lager mexicaine label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5352553_16395_sm.jpeg" alt="El Gato Lime - Lager mexicaine label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">3.75</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/noctem-artisans-brasseurs-el-gato-lime-lager-mexicaine/5352553" target="_blank" rel="noopener noreferrer">El Gato Lime - Lager mexicaine</a></h3>
                 <p class="meta">Noctem Artisans Brasseurs <span aria-hidden="true">·</span> 4.5% <span aria-hidden="true">·</span> Lager - Mexican</p>
-                <p class="ratings-count">625 ratings</p>
+                <p class="ratings-count">627 ratings</p>
               </div>
             </article>
             
-            <article class="beer-card" data-style-group="ipa">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-11474_3559e_hd.jpeg" aria-label="View larger Interurban IPA label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-11474_5976e_sm.jpeg" alt="Interurban IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
               <div class="rating-badge">3.69</div>
               <div class="beer-content">
                 <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-interurban-ipa/11474" target="_blank" rel="noopener noreferrer">Interurban IPA</a></h3>
                 <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 6.2% <span aria-hidden="true">·</span> IPA - American</p>
-                <p class="ratings-count">40,840 ratings</p>
+                <p class="ratings-count">40,841 ratings</p>
               </div>
             </article>
             </div>
     </section>
   </main>
+  <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
+    <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
+    <img alt="" referrerpolicy="no-referrer">
+  </dialog>
   <script>
     (function () {
       const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
-      if (!filters.length) return;
+      const statusFilters = Array.from(document.querySelectorAll('input[data-status-filter]'));
 
-      const styledCards = Array.from(document.querySelectorAll('[data-style-group]'));
+      const beerCards = Array.from(document.querySelectorAll('.beer-card'));
+      const candidateCards = Array.from(document.querySelectorAll('.candidate-card'));
       const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
 
       function applyStyleFilters() {
@@ -398,19 +464,52 @@
           filters.filter((filter) => filter.checked).map((filter) => filter.value)
         );
 
-        styledCards.forEach((card) => {
-          card.hidden = !enabled.has(card.dataset.styleGroup);
+        const selectedStatus = statusFilters.find((filter) => filter.checked).value;
+        const statusVisible = (card) => selectedStatus === 'all' || card.dataset.status === selectedStatus;
+
+        beerCards.forEach((card) => {
+          const styleVisible = !card.dataset.styleGroup || enabled.has(card.dataset.styleGroup);
+          card.hidden = !styleVisible || !statusVisible(card);
+        });
+
+        candidateCards.forEach((card) => {
+          card.hidden = Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup);
         });
 
         reviewGroups.forEach((group) => {
           const candidates = Array.from(group.querySelectorAll('.candidate-card'));
-          if (!candidates.length) return;
-          group.hidden = candidates.every((candidate) => candidate.hidden);
+          group.hidden = !statusVisible(group) ||
+            (candidates.length && candidates.every((candidate) => candidate.hidden));
         });
       }
 
       filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      statusFilters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
       applyStyleFilters();
+
+      const dialog = document.getElementById('label-dialog');
+      const dialogImage = dialog.querySelector('img');
+      const closeButton = dialog.querySelector('.label-dialog-close');
+      let opener = null;
+
+      document.querySelectorAll('[data-label-preview]').forEach((button) => {
+        button.addEventListener('click', () => {
+          opener = button;
+          dialogImage.src = button.dataset.labelPreview;
+          dialogImage.alt = button.querySelector('img').alt;
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else window.open(button.dataset.labelPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        dialogImage.removeAttribute('src');
+        if (opener) opener.focus();
+      });
     })();
   </script>
 </body>
