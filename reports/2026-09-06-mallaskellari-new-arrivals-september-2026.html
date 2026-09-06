@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="untap-report-title" content="Mallaskellari New Arrivals - September 2026">
+  <meta name="untap-report-date" content="2026-09-06">
+  <meta name="untap-total-beers" content="4">
+  <meta name="untap-confirmed-count" content="3">
+  <meta name="untap-review-count" content="1">
+  <meta name="untap-ambiguous-count" content="1">
+  <meta name="untap-failed-count" content="0">
+  <title>Mallaskellari New Arrivals - September 2026</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { width: min(900px, 100%); margin: 0 auto; padding: 24px 16px 48px; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    h2 { margin-top: 32px; }
+    h3, h4, p { margin-top: 0; }
+    .summary { margin: 0; opacity: .72; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .status-filters { margin-bottom: 0; }
+    .status-filters + .style-filters { margin-top: 12px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .beer-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 14px; align-items: start; }
+    .beer-card.has-label { grid-template-columns: 72px 64px 1fr; }
+    .beer-label { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; background: color-mix(in srgb, Canvas 88%, CanvasText 12%); }
+    .label-preview-button { display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: zoom-in; }
+    .label-preview-button:hover { outline: 2px solid LinkText; outline-offset: 2px; }
+    .label-preview-button:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
+    .beer-link { color: LinkText; text-decoration-thickness: .08em; text-underline-offset: .15em; }
+    .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .production-status { min-height: 1.35em; margin: 8px 0 0; opacity: .72; font-size: .9rem; line-height: 1.35; }
+    .review-group { padding: 16px; }
+    .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .review-heading h3 { margin-bottom: 8px; }
+    .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
+    .candidate-list { margin-top: 12px; }
+    .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
+    .candidate-card.has-label { grid-template-columns: 56px 92px 1fr; }
+    .candidate-card .beer-label { width: 56px; height: 56px; border-radius: 8px; }
+    .candidate-card .label-preview-button { border-radius: 8px; }
+    .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
+    .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
+    .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
+    .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
+    .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
+    @media (max-width: 520px) {
+      main { padding: 18px 12px 36px; }
+      .beer-card { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
+      .beer-card.has-label .beer-label { width: 54px; height: 54px; }
+      .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+      .candidate-card.has-label { grid-template-columns: 48px 1fr; }
+      .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
+      .candidate-card.has-label .beer-label { width: 48px; height: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mallaskellari New Arrivals - September 2026</h1>
+      <p class="summary">4 beers · 3 confirmed · 1 ambiguous</p>
+    </header>
+
+    <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="non-alcoholic" checked><span>Non-Alcoholic</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label></div></fieldset>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Results</h2>
+      <div class="results-list">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756527_b4c05_hd.jpeg" aria-label="View larger Harvest III label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756527_b4c05_sm.jpeg" alt="Harvest III label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.28</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-harvest-iii/6756527" target="_blank" rel="noopener noreferrer">Harvest III</a></h3>
+                <p class="meta">Lolev Beer <span aria-hidden="true">·</span> 8.1% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">548 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4047318_5532f_hd.jpeg" aria-label="View larger Watermelon Cotton Candy Sour label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4047318_d434a_sm.jpeg" alt="Watermelon Cotton Candy Sour label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.06</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/weldwerks-brewing-co-watermelon-cotton-candy-sour/4047318" target="_blank" rel="noopener noreferrer">Watermelon Cotton Candy Sour</a></h3>
+                <p class="meta">WeldWerks Brewing Co. <span aria-hidden="true">·</span> 4.7% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                <p class="ratings-count">5,296 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="review-group" data-status="ambiguous">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>FREMONT NON-ALCOHOLIC IPA</h3>
+              </div>
+              <p class="review-reason">Multiple candidates include &#x27;Non-Alcoholic IPA&#x27;, &#x27;Non-Alcoholic Hazy IPA&#x27;</p>
+              
+              <ol class="candidate-list">
+                <li class="candidate-card has-label" data-style-group="non-alcoholic">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5228575_692fc_hd.jpeg" aria-label="View larger Non-Alcoholic IPA label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5228575_692fc_sm.jpeg" alt="Non-Alcoholic IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.906</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-ipa/5228575" target="_blank" rel="noopener noreferrer">Non-Alcoholic IPA</a></h4>
+                    <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 0.5% <span aria-hidden="true">·</span> Non-Alcoholic - IPA</p>
+                    <p class="ratings-count">Rating 3.48 · 1,479 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="non-alcoholic">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-1508_c8b6c.jpeg" alt="Non-Alcoholic Hazy IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.866</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-hazy-ipa/6621893" target="_blank" rel="noopener noreferrer">Non-Alcoholic Hazy IPA</a></h4>
+                    <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 0.5% <span aria-hidden="true">·</span> Non-Alcoholic - IPA</p>
+                    <p class="ratings-count">Rating 3.41 · 31 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="non-alcoholic">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-1508_c8b6c.jpeg" alt="Non-Alcoholic Hazy IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">3.41</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-hazy-ipa/6621893" target="_blank" rel="noopener noreferrer">Non-Alcoholic Hazy IPA</a></h3>
+                <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 0.5% <span aria-hidden="true">·</span> Non-Alcoholic - IPA</p>
+                <p class="ratings-count">31 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            </div>
+    </section>
+  </main>
+  <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
+    <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
+    <img alt="" referrerpolicy="no-referrer">
+  </dialog>
+  <script>
+    (function () {
+      const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
+      const statusFilters = Array.from(document.querySelectorAll('input[data-status-filter]'));
+
+      const beerCards = Array.from(document.querySelectorAll('.beer-card'));
+      const candidateCards = Array.from(document.querySelectorAll('.candidate-card'));
+      const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
+
+      function applyStyleFilters() {
+        const enabled = new Set(
+          filters.filter((filter) => filter.checked).map((filter) => filter.value)
+        );
+
+        const selectedStatus = statusFilters.find((filter) => filter.checked).value;
+        const statusVisible = (card) => selectedStatus === 'all' || card.dataset.status === selectedStatus;
+
+        beerCards.forEach((card) => {
+          const styleVisible = !card.dataset.styleGroup || enabled.has(card.dataset.styleGroup);
+          card.hidden = !styleVisible || !statusVisible(card);
+        });
+
+        candidateCards.forEach((card) => {
+          card.hidden = Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup);
+        });
+
+        reviewGroups.forEach((group) => {
+          const candidates = Array.from(group.querySelectorAll('.candidate-card'));
+          group.hidden = !statusVisible(group) ||
+            (candidates.length && candidates.every((candidate) => candidate.hidden));
+        });
+      }
+
+      filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      statusFilters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      applyStyleFilters();
+
+      const dialog = document.getElementById('label-dialog');
+      const dialogImage = dialog.querySelector('img');
+      const closeButton = dialog.querySelector('.label-dialog-close');
+      let opener = null;
+
+      document.querySelectorAll('[data-label-preview]').forEach((button) => {
+        button.addEventListener('click', () => {
+          opener = button;
+          dialogImage.src = button.dataset.labelPreview;
+          dialogImage.alt = button.querySelector('img').alt;
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else window.open(button.dataset.labelPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        dialogImage.removeAttribute('src');
+        if (opener) opener.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
