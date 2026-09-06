@@ -58,15 +58,17 @@
     .review-heading h3 { margin-bottom: 8px; }
     .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
     .candidate-list { margin-top: 12px; }
-    .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
-    .candidate-card.has-label { grid-template-columns: 56px 92px 1fr; }
+    .candidate-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 12px; align-items: start; }
+    .candidate-card.has-label { grid-template-columns: 56px 64px minmax(0, 1fr); }
+    .candidate-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 5px; }
+    .candidate-heading h4 { margin-bottom: 0; }
     .candidate-card .beer-label { width: 56px; height: 56px; border-radius: 8px; }
     .candidate-card .label-preview-button { border-radius: 8px; }
     .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
     .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
     .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
     .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
-    .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .candidate-score { font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
     .empty { opacity: .65; font-style: italic; }
     @media (prefers-reduced-motion: reduce) {
       .style-chip span, .style-chip span::before { transition: none; }
@@ -131,24 +133,26 @@
               <ol class="candidate-list">
                 <li class="candidate-card has-label" data-style-group="non-alcoholic">
                   <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5228575_692fc_hd.jpeg" aria-label="View larger Non-Alcoholic IPA label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5228575_692fc_sm.jpeg" alt="Non-Alcoholic IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
-                  <div class="candidate-score">Match 0.906</div>
+                  <div class="rating-column"><div class="rating-badge">3.48</div>
+                    <p class="ratings-count">1,479 ratings</p></div>
                   <div>
-                    <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-ipa/5228575" target="_blank" rel="noopener noreferrer">Non-Alcoholic IPA</a></h4>
+                    <div class="candidate-heading"><h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-ipa/5228575" target="_blank" rel="noopener noreferrer">Non-Alcoholic IPA</a></h4>
+                      <span class="candidate-score">Match 0.906</span></div>
                     <p class="brewery">Fremont Brewing</p>
                     <p class="meta">0.5% <span aria-hidden="true">·</span> Non-Alcoholic - IPA</p>
-                    <p class="ratings-count">Rating 3.48 · 1,479 ratings</p>
                     <p class="production-status">Listed as in production on Untappd</p>
                   </div>
                 </li>
                 
                 <li class="candidate-card has-label" data-style-group="non-alcoholic">
                   <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-1508_c8b6c.jpeg" alt="Non-Alcoholic Hazy IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
-                  <div class="candidate-score">Match 0.866</div>
+                  <div class="rating-column"><div class="rating-badge">3.41</div>
+                    <p class="ratings-count">31 ratings</p></div>
                   <div>
-                    <h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-hazy-ipa/6621893" target="_blank" rel="noopener noreferrer">Non-Alcoholic Hazy IPA</a></h4>
+                    <div class="candidate-heading"><h4><a class="beer-link" href="https://untappd.com/b/fremont-brewing-non-alcoholic-hazy-ipa/6621893" target="_blank" rel="noopener noreferrer">Non-Alcoholic Hazy IPA</a></h4>
+                      <span class="candidate-score">Match 0.866</span></div>
                     <p class="brewery">Fremont Brewing</p>
                     <p class="meta">0.5% <span aria-hidden="true">·</span> Non-Alcoholic - IPA</p>
-                    <p class="ratings-count">Rating 3.41 · 31 ratings</p>
                     <p class="production-status">Listed as in production on Untappd</p>
                   </div>
                 </li>
