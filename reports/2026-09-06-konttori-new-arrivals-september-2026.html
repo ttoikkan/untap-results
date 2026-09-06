@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="untap-report-title" content="Konttori New Arrivals - September 2026">
+  <meta name="untap-report-date" content="2026-09-06">
+  <meta name="untap-total-beers" content="22">
+  <meta name="untap-confirmed-count" content="19">
+  <meta name="untap-review-count" content="3">
+  <meta name="untap-ambiguous-count" content="3">
+  <meta name="untap-failed-count" content="0">
+  <title>Konttori New Arrivals - September 2026</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { width: min(900px, 100%); margin: 0 auto; padding: 24px 16px 48px; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    h2 { margin-top: 32px; }
+    h3, h4, p { margin-top: 0; }
+    .summary { margin: 0; opacity: .72; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .status-filters { margin-bottom: 0; }
+    .status-filters + .style-filters { margin-top: 12px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .beer-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 14px; align-items: start; }
+    .beer-card.has-label { grid-template-columns: 72px 64px 1fr; }
+    .beer-label { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; background: color-mix(in srgb, Canvas 88%, CanvasText 12%); }
+    .label-preview-button { display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: zoom-in; }
+    .label-preview-button:hover { outline: 2px solid LinkText; outline-offset: 2px; }
+    .label-preview-button:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
+    .beer-link { color: LinkText; text-decoration-thickness: .08em; text-underline-offset: .15em; }
+    .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .production-status { min-height: 1.35em; margin: 8px 0 0; opacity: .72; font-size: .9rem; line-height: 1.35; }
+    .review-group { padding: 16px; }
+    .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .review-heading h3 { margin-bottom: 8px; }
+    .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
+    .candidate-list { margin-top: 12px; }
+    .candidate-card { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px; }
+    .candidate-card.has-label { grid-template-columns: 56px 92px 1fr; }
+    .candidate-card .beer-label { width: 56px; height: 56px; border-radius: 8px; }
+    .candidate-card .label-preview-button { border-radius: 8px; }
+    .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
+    .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
+    .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
+    .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
+    .candidate-score { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
+    @media (max-width: 520px) {
+      main { padding: 18px 12px 36px; }
+      .beer-card { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
+      .beer-card.has-label .beer-label { width: 54px; height: 54px; }
+      .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+      .candidate-card.has-label { grid-template-columns: 48px 1fr; }
+      .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
+      .candidate-card.has-label .beer-label { width: 48px; height: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Konttori New Arrivals - September 2026</h1>
+      <p class="summary">22 beers · 19 confirmed · 3 ambiguous</p>
+    </header>
+
+    <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="barleywine" checked><span>Barleywine</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="blonde / golden ale" checked><span>Blonde / Golden Ale</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="red ale" checked><span>Red Ale</span></label><label class="style-chip" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label><label class="style-chip" for="style-filter-5"><input id="style-filter-5" type="checkbox" data-style-filter value="stout" checked><span>Stout</span></label></div></fieldset>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Results</h2>
+      <div class="results-list">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Los Vigilantes Oscuros label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">4.51</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-los-vigilantes-oscuros/6785258" target="_blank" rel="noopener noreferrer">Los Vigilantes Oscuros</a></h3>
+                <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 10.3% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="ratings-count">624 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Nobosuma label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">4.46</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-nobosuma/6776778" target="_blank" rel="noopener noreferrer">Nobosuma</a></h3>
+                <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 12.2% <span aria-hidden="true">·</span> IPA - Quadruple</p>
+                <p class="ratings-count">857 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6744947_18ff5_hd.jpeg" aria-label="View larger African Wild Dog label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6744947_18ff5_sm.jpeg" alt="African Wild Dog label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.46</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-african-wild-dog/6744947" target="_blank" rel="noopener noreferrer">African Wild Dog</a></h3>
+                <p class="meta">Lolev Beer <span aria-hidden="true">·</span> 8.8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">683 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6712314_dccc0_hd.jpeg" aria-label="View larger Complicité - Moksa label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6712314_dccc0_sm.jpeg" alt="Complicité - Moksa label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.44</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-du-bas-canada-complicite-moksa/6712314" target="_blank" rel="noopener noreferrer">Complicité - Moksa</a></h3>
+                <p class="meta">Brasserie du Bas-Canada <span aria-hidden="true">·</span> 11.9% <span aria-hidden="true">·</span> Stout - Russian Imperial</p>
+                <p class="ratings-count">181 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5734564_2cf45_hd.jpeg" aria-label="View larger Infinitum label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5734564_2cf45_sm.jpeg" alt="Infinitum label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.44</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-infinitum/5734564" target="_blank" rel="noopener noreferrer">Infinitum</a></h3>
+                <p class="meta">Brujos Brewing <span aria-hidden="true">·</span> 10.3% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="ratings-count">2,937 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="barleywine">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6712344_aa698_hd.jpeg" aria-label="View larger Ça Goûte Drôle label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6712344_aa698_sm.jpeg" alt="Ça Goûte Drôle label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.43</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-du-bas-canada-ca-goute-drole/6712344" target="_blank" rel="noopener noreferrer">Ça Goûte Drôle</a></h3>
+                <p class="meta">Brasserie du Bas-Canada <span aria-hidden="true">·</span> 11.9% <span aria-hidden="true">·</span> Barleywine - English</p>
+                <p class="ratings-count">135 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776487_d3b0a_hd.jpeg" aria-label="View larger Temporalis #0061 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776487_d3b0a_sm.jpeg" alt="Temporalis #0061 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.43</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-temporalis-0061/6776487" target="_blank" rel="noopener noreferrer">Temporalis #0061</a></h3>
+                <p class="meta">Messorem <span aria-hidden="true">·</span> 10% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="ratings-count">848 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4555229_82469_hd.jpeg" aria-label="View larger Hydra | Peach + Strawberry + Mango + Ice Cream label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4555229_53697_sm.jpeg" alt="Hydra | Peach + Strawberry + Mango + Ice Cream label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.40</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-hydra-peach-strawberry-mango-ice-cream/4555229" target="_blank" rel="noopener noreferrer">Hydra | Peach + Strawberry + Mango + Ice Cream</a></h3>
+                <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
+                <p class="ratings-count">1,162 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="barleywine">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6686355_2dd31_hd.jpeg" aria-label="View larger Brew 9000 (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6686355_58261_sm.jpeg" alt="Brew 9000 (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.38</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-brew-9000-2026/6686355" target="_blank" rel="noopener noreferrer">Brew 9000 (2026)</a></h3>
+                <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 14.7% <span aria-hidden="true">·</span> Barleywine - English</p>
+                <p class="ratings-count">495 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6303481_864a3_hd.jpeg" aria-label="View larger The Rusty Nail (2025) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6303481_864a3_sm.jpeg" alt="The Rusty Nail (2025) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.37</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/fremont-brewing-the-rusty-nail-2025/6303481" target="_blank" rel="noopener noreferrer">The Rusty Nail (2025)</a></h3>
+                <p class="meta">Fremont Brewing <span aria-hidden="true">·</span> 14.5% <span aria-hidden="true">·</span> Stout - Imperial / Double Oatmeal</p>
+                <p class="ratings-count">615 ratings</p>
+                <p class="production-status">Listed as out of production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776439_40d3e_hd.jpeg" aria-label="View larger Snow Leopard label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776439_40d3e_sm.jpeg" alt="Snow Leopard label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.35</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-snow-leopard/6776439" target="_blank" rel="noopener noreferrer">Snow Leopard</a></h3>
+                <p class="meta">Lolev Beer <span aria-hidden="true">·</span> 8.7% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">659 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="review-group" data-status="ambiguous">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>OLD NATION M-43</h3>
+              </div>
+              <p class="review-reason">Multiple 6.8% variants found</p>
+              <ol class="candidate-list">
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/assets/images/temp/badge-beer-default.png" alt="M-43 Tropical label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.835</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-tropical/2543373" target="_blank" rel="noopener noreferrer">M-43 Tropical</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.35 · 34 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-208038_482eb.jpeg" alt="M-43 (July 2023) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.826</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-july-2023/5453723" target="_blank" rel="noopener noreferrer">M-43 (July 2023)</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 3.99 · 24 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/assets/images/temp/badge-beer-default.png" alt="M-43 Caramel Apple label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.801</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-caramel-apple/3506984" target="_blank" rel="noopener noreferrer">M-43 Caramel Apple</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 0.00 · 5 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-208038_482eb.jpeg" alt="M-43 Pineapple Dream label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.792</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-pineapple-dream/2663311" target="_blank" rel="noopener noreferrer">M-43 Pineapple Dream</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.18 · 87 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/assets/images/temp/badge-beer-default.png" alt="M-43 Strawberry (2019) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.792</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-strawberry-2019/5849278" target="_blank" rel="noopener noreferrer">M-43 Strawberry (2019)</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 0.00 · 3 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-2342408_624d1_hd.jpeg" aria-label="View larger M-43 Tart Strawberry label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-2342408_624d1_sm.jpeg" alt="M-43 Tart Strawberry label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.792</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-tart-strawberry/2342408" target="_blank" rel="noopener noreferrer">M-43 Tart Strawberry</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.08 · 26,020 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-1778578_97684_hd.jpeg" aria-label="View larger M-43 N.E. India Pale Ale label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-1778578_41a4e_sm.jpeg" alt="M-43 N.E. India Pale Ale label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.780</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-n-e-india-pale-ale/1778578" target="_blank" rel="noopener noreferrer">M-43 N.E. India Pale Ale</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.16 · 140,136 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-3349990_eb00c_hd.jpeg" aria-label="View larger M-43 Pineapple Jalapeño label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-3349990_10629_sm.jpeg" alt="M-43 Pineapple Jalapeño label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.780</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-pineapple-jalapeno/3349990" target="_blank" rel="noopener noreferrer">M-43 Pineapple Jalapeño</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.01 · 750 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-208038_482eb.jpeg" alt="M-43 Tart Strawberry (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.774</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-tart-strawberry-2026/6683792" target="_blank" rel="noopener noreferrer">M-43 Tart Strawberry (2026)</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.17 · 271 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-208038_482eb.jpeg" alt="M- 43 N. E. India Pale Ale 2025 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.766</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-m-43-n-e-india-pale-ale-2025/6377725" target="_blank" rel="noopener noreferrer">M- 43 N. E. India Pale Ale 2025</a></h4>
+                    <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 6.8% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="ratings-count">Rating 4.05 · 29 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756729_c9900_hd.jpeg" aria-label="View larger Destructio 0011 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756729_c9900_sm.jpeg" alt="Destructio 0011 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.32</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-destructio-0011/6756729" target="_blank" rel="noopener noreferrer">Destructio 0011</a></h3>
+                <p class="meta">Messorem <span aria-hidden="true">·</span> 8.5% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">540 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6586946_0ae41_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk: Triple Mash (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6586946_0ae41_sm.jpeg" alt="Dragon&#x27;s Milk: Triple Mash (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.30</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-triple-mash-2026/6586946" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk: Triple Mash (2026)</a></h3>
+                <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 17% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                <p class="ratings-count">2,635 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="review-group" data-status="ambiguous">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>FREQUENTEM JUST FRUIT (PINEAPPLE, ORANGE, MANGO)</h3>
+              </div>
+              <p class="review-reason">Multiple candidates include &#x27;Just Fruit (Pineapple, Orange, Mango)&#x27;, &#x27;Just Fruit (Pineapple, Cara Cara Orange, Mango)&#x27;</p>
+              <ol class="candidate-list">
+                <li class="candidate-card has-label" data-style-group="sour">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4677791_a9dbd_hd.jpeg" aria-label="View larger Just Fruit (Pineapple, Orange, Mango) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4677791_6d5f3_sm.jpeg" alt="Just Fruit (Pineapple, Orange, Mango) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 1.000</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/frequentem-brewing-co-just-fruit-pineapple-orange-mango/4677791" target="_blank" rel="noopener noreferrer">Just Fruit (Pineapple, Orange, Mango)</a></h4>
+                    <p class="meta">Frequentem Brewing Co. <span aria-hidden="true">·</span> 5.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.29 · 352 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="sour">
+                  <img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4311041_983ca_sm.jpeg" alt="Just Fruit (Pineapple, Cara Cara Orange, Mango) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.959</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/frequentem-brewing-co-just-fruit-pineapple-cara-cara-orange-mango/4311041" target="_blank" rel="noopener noreferrer">Just Fruit (Pineapple, Cara Cara Orange, Mango)</a></h4>
+                    <p class="meta">Frequentem Brewing Co. <span aria-hidden="true">·</span> 5.5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                    <p class="ratings-count">Rating 4.42 · 149 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-3176145_ac015_hd.jpeg" aria-label="View larger Hydra | Blackberry + Pineapple + Coconut label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-3176145_eb6ef_sm.jpeg" alt="Hydra | Blackberry + Pineapple + Coconut label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.28</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/mortalis-brewing-company-hydra-blackberry-pineapple-coconut/3176145" target="_blank" rel="noopener noreferrer">Hydra | Blackberry + Pineapple + Coconut</a></h3>
+                <p class="meta">Mortalis Brewing Company <span aria-hidden="true">·</span> 7% <span aria-hidden="true">·</span> Sour - Smoothie / Pastry</p>
+                <p class="ratings-count">513 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6737330_c326a_hd.jpeg" aria-label="View larger Melted label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6737330_c326a_sm.jpeg" alt="Melted label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.27</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/all-my-friends-beer-co-melted/6737330" target="_blank" rel="noopener noreferrer">Melted</a></h3>
+                <p class="meta">All My Friends Beer Co. <span aria-hidden="true">·</span> 8.2% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">167 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-2065903_048a6_hd.jpeg" aria-label="View larger Boss Tweed label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-2065903_9c838_sm.jpeg" alt="Boss Tweed label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.27</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/old-nation-brewing-co-boss-tweed/2065903" target="_blank" rel="noopener noreferrer">Boss Tweed</a></h3>
+                <p class="meta">Old Nation Brewing Co. <span aria-hidden="true">·</span> 9.3% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">85,471 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-908_b4462.jpeg" alt="Dragon’s Milk Reserve: S’mores (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-badge">4.23</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-reserve-s-mores-2026/6699797" target="_blank" rel="noopener noreferrer">Dragon’s Milk Reserve: S’mores (2026)</a></h3>
+                <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double Pastry</p>
+                <p class="ratings-count">304 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6787642_df08d_hd.jpeg" aria-label="View larger Eight Party Hats label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6787642_f4db1_sm.jpeg" alt="Eight Party Hats label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.11</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/wax-wings-brewing-company-eight-party-hats/6787642" target="_blank" rel="noopener noreferrer">Eight Party Hats</a></h3>
+                <p class="meta">Wax Wings Brewing Company <span aria-hidden="true">·</span> 8.5% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="ratings-count">425 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6787647_8b2f9_hd.jpeg" aria-label="View larger Eight Candles label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6787647_a104b_sm.jpeg" alt="Eight Candles label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-badge">4.07</div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/wax-wings-brewing-company-eight-candles/6787647" target="_blank" rel="noopener noreferrer">Eight Candles</a></h3>
+                <p class="meta">Wax Wings Brewing Company <span aria-hidden="true">·</span> 10.5% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="ratings-count">348 ratings</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="review-group" data-status="ambiguous">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>NEW HOLLAND DRAGON&#x27;S MILK</h3>
+              </div>
+              <p class="review-reason">Multiple 11% variants found</p>
+              <ol class="candidate-list">
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-123662_a1953_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-123662_d2eac_sm.jpeg" alt="Dragon&#x27;s Milk label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 1.000</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk/123662" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.05 · 300,071 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-598909_44b26_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk (2014) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-598909_feafa_sm.jpeg" alt="Dragon&#x27;s Milk (2014) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.950</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-2014/598909" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk (2014)</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.14 · 10,524 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-123662_d2eac_sm.jpeg" alt="Dragon&#x27;s Milk (2015) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.950</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-2015/1005896" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk (2015)</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.20 · 9,495 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-123662_d2eac_sm.jpeg" alt="Dragon&#x27;s Milk (2016) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.950</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-2016/1469319" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk (2016)</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.21 · 9,849 ratings</p>
+                    <p class="production-status">Listed as out of production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-908_b4462.jpeg" alt="Dragon&#x27;s Milk 2019 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.950</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-2019/5702058" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk 2019</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double Milk</p>
+                    <p class="ratings-count">Rating 3.83 · 39 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5320476_d2dac_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk Nitro label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5320476_5cc18_sm.jpeg" alt="Dragon&#x27;s Milk Nitro label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.941</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-nitro/5320476" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk Nitro</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.13 · 205 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="blonde / golden ale">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-908_b4462.jpeg" alt="Dragon’s Milk Blonde Ale label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.907</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-blonde-ale/5627873" target="_blank" rel="noopener noreferrer">Dragon’s Milk Blonde Ale</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Blonde / Golden Ale - Other</p>
+                    <p class="ratings-count">Rating 4.00 · 22 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6299330_d3c3f_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk Emerald IPA label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6299330_32447_sm.jpeg" alt="Dragon&#x27;s Milk Emerald IPA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.901</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-emerald-ipa/6299330" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk Emerald IPA</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> IPA - Imperial / Double</p>
+                    <p class="ratings-count">Rating 4.01 · 4,654 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="stout">
+                  <img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-3499630_d474a_sm.jpeg" alt="Dragon&#x27;s Milk Green Coffee label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="candidate-score">Match 0.896</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-green-coffee/3499630" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk Green Coffee</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Stout - Coffee</p>
+                    <p class="ratings-count">Rating 0.00 · 8 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="red ale">
+                  <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5148476_06c70_hd.jpeg" aria-label="View larger Dragon’s Milk Crimson Keep label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5148476_2b9e7_sm.jpeg" alt="Dragon’s Milk Crimson Keep label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+                  <div class="candidate-score">Match 0.896</div>
+                  <div>
+                    <h4><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-crimson-keep/5148476" target="_blank" rel="noopener noreferrer">Dragon’s Milk Crimson Keep</a></h4>
+                    <p class="meta">New Holland Brewing <span aria-hidden="true">·</span> 11% <span aria-hidden="true">·</span> Red Ale - Imperial / Double</p>
+                    <p class="ratings-count">Rating 3.96 · 12,845 ratings</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                </ol>
+            </article>
+            </div>
+    </section>
+  </main>
+  <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
+    <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
+    <img alt="" referrerpolicy="no-referrer">
+  </dialog>
+  <script>
+    (function () {
+      const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
+      const statusFilters = Array.from(document.querySelectorAll('input[data-status-filter]'));
+
+      const beerCards = Array.from(document.querySelectorAll('.beer-card'));
+      const candidateCards = Array.from(document.querySelectorAll('.candidate-card'));
+      const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
+
+      function applyStyleFilters() {
+        const enabled = new Set(
+          filters.filter((filter) => filter.checked).map((filter) => filter.value)
+        );
+
+        const selectedStatus = statusFilters.find((filter) => filter.checked).value;
+        const statusVisible = (card) => selectedStatus === 'all' || card.dataset.status === selectedStatus;
+
+        beerCards.forEach((card) => {
+          const styleVisible = !card.dataset.styleGroup || enabled.has(card.dataset.styleGroup);
+          card.hidden = !styleVisible || !statusVisible(card);
+        });
+
+        candidateCards.forEach((card) => {
+          card.hidden = Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup);
+        });
+
+        reviewGroups.forEach((group) => {
+          const candidates = Array.from(group.querySelectorAll('.candidate-card'));
+          group.hidden = !statusVisible(group) ||
+            (candidates.length && candidates.every((candidate) => candidate.hidden));
+        });
+      }
+
+      filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      statusFilters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      applyStyleFilters();
+
+      const dialog = document.getElementById('label-dialog');
+      const dialogImage = dialog.querySelector('img');
+      const closeButton = dialog.querySelector('.label-dialog-close');
+      let opener = null;
+
+      document.querySelectorAll('[data-label-preview]').forEach((button) => {
+        button.addEventListener('click', () => {
+          opener = button;
+          dialogImage.src = button.dataset.labelPreview;
+          dialogImage.alt = button.querySelector('img').alt;
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else window.open(button.dataset.labelPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        dialogImage.removeAttribute('src');
+        if (opener) opener.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
