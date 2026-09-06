@@ -59,11 +59,9 @@
     .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
     .candidate-list { margin-top: 12px; }
     .candidate-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 12px; align-items: start; }
-    .candidate-card.has-label { grid-template-columns: 56px 64px minmax(0, 1fr); }
+    .candidate-card.has-label { grid-template-columns: 72px 64px minmax(0, 1fr); }
     .candidate-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 5px; }
     .candidate-heading h4 { margin-bottom: 0; }
-    .candidate-card .beer-label { width: 56px; height: 56px; border-radius: 8px; }
-    .candidate-card .label-preview-button { border-radius: 8px; }
     .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
     .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
     .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
@@ -80,9 +78,9 @@
       .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
       .beer-card.has-label .beer-label { width: 54px; height: 54px; }
       .candidate-card { grid-template-columns: 1fr; gap: 4px; }
-      .candidate-card.has-label { grid-template-columns: 48px 1fr; }
+      .candidate-card.has-label { grid-template-columns: 54px 1fr; }
       .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
-      .candidate-card.has-label .beer-label { width: 48px; height: 48px; }
+      .candidate-card.has-label .beer-label { width: 54px; height: 54px; }
     }
   </style>
 </head>
