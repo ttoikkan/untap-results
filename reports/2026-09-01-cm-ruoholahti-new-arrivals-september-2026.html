@@ -97,16 +97,40 @@
     <section aria-labelledby="results-heading">
       <h2 id="results-heading">Results</h2>
       <div class="results-list">
-            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
-              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Populus W/ Citra 2026 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
-              <div class="rating-column"><div class="rating-badge">4.45</div>
-                <p class="ratings-count">231 ratings</p></div>
-              <div class="beer-content">
-                <h3><a class="beer-link" href="https://untappd.com/b/brujos-brewing-populus-w-citra-2026/6765204" target="_blank" rel="noopener noreferrer">Populus W/ Citra 2026</a></h3>
-                <p class="brewery">Brujos Brewing</p>
-                <p class="meta">7.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
-                <p class="production-status">Listed as in production on Untappd</p><p class="manual-note">Manually confirmed</p>
+            <article class="review-group" data-status="ambiguous" data-initial-selection="https://untappd.com/b/brujos-brewing-populus-w-citra-2026/6765204">
+              <div class="review-heading">
+                <span class="status-pill">Ambiguous</span>
+                <h3>Brujos Populus w/ Citra</h3>
               </div>
+              <p class="review-reason">Match unresolved</p>
+              
+              <ol class="candidate-list">
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Populus W/ CITRA label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="rating-column"><div class="rating-badge">4.35</div>
+                    <p class="ratings-count">521 ratings</p></div>
+                  <div>
+                    <div class="candidate-heading"><h4><a class="beer-link" href="https://untappd.com/b/brujos-brewing-populus-w-citra/6348426" target="_blank" rel="noopener noreferrer">Populus W/ CITRA</a></h4>
+                      <span class="candidate-score">Match 1.000</span></div>
+                    <p class="brewery">Brujos Brewing</p>
+                    <p class="meta">7.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                
+                <li class="candidate-card has-label" data-style-group="ipa">
+                  <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-178746_96491.jpeg" alt="Populus W/ Citra 2026 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+                  <div class="rating-column"><div class="rating-badge">4.45</div>
+                    <p class="ratings-count">231 ratings</p></div>
+                  <div>
+                    <div class="candidate-heading"><h4><a class="beer-link" href="https://untappd.com/b/brujos-brewing-populus-w-citra-2026/6765204" target="_blank" rel="noopener noreferrer">Populus W/ Citra 2026</a></h4>
+                      <span class="candidate-score">Match 0.955</span></div>
+                    <p class="brewery">Brujos Brewing</p>
+                    <p class="meta">7.5% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                    <p class="production-status">Listed as in production on Untappd</p>
+                  </div>
+                </li>
+                </ol>
             </article>
             
             <article class="beer-card has-label" data-status="ok" data-style-group="sour">
@@ -797,6 +821,11 @@
     });
   }
   cards.forEach((card, index) => { if (card.dataset.status === 'ambiguous') addButtons(card, index); });
+  cards.forEach((card, index) => {
+    const url = card.dataset.initialSelection;
+    const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === url);
+    if (candidate) choose(card, index, candidate, url, false);
+  });
   toolbar.append(button('Export selections', () => {
     const payload = {format: 'untap-manual-review-trial-v1', report_id: reportId,
       title: document.title, selections: Object.entries(choices).map(([index, url]) => ({row: Number(index), url}))};
@@ -847,8 +876,9 @@
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
       cards.forEach((card, index) => {
-        if (card.dataset.status !== 'ambiguous' || typeof saved[index] !== 'string') return;
-        const candidate = Array.from(card.querySelectorAll('.candidate-card')).find(el => el.querySelector('.beer-link')?.href === saved[index]);
+        if (typeof saved[index] !== 'string') return;
+        const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === saved[index]);
+        if (candidate && selections.has(card) && selections.get(card) !== saved[index]) card.querySelector('.manual-action').click();
         if (candidate) choose(card, index, candidate, saved[index], false);
       });
       if (selections.size) message.textContent = 'Restored your choices for this report.';
