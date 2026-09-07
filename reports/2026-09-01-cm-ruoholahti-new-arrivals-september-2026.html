@@ -666,6 +666,8 @@
   const choices = {};
   const original = new Map();
   const selections = new Map();
+  const candidatesByRow = cards.map(card => card.dataset.status === 'ambiguous'
+    ? Array.from(card.querySelectorAll('.candidate-card')) : []);
   if (!cards.some(card => card.dataset.status === 'ambiguous')) return;
   const styles = document.createElement('style');
   styles.textContent = `
@@ -826,6 +828,43 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }));
   updateAlreadyMatchedHints();
+  const importFile = document.createElement('input');
+  importFile.type = 'file'; importFile.accept = '.json,application/json'; importFile.hidden = true;
+  toolbar.append(importFile, button('Import selections', () => importFile.click()));
+  importFile.addEventListener('change', async () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    try {
+      if (file.size > 1000000) throw new Error('File is too large.');
+      const payload = JSON.parse(await file.text());
+      if (!payload || payload.format !== 'untap-manual-review-trial-v1' ||
+          !reportId || payload.report_id !== reportId || !Array.isArray(payload.selections)) {
+        throw new Error('This is not a selections file for this exact report.');
+      }
+      const seen = new Set();
+      // Validate the entire file before changing any choices.
+      const entries = payload.selections.map(entry => {
+        if (!entry || !Number.isInteger(entry.row) || seen.has(entry.row) ||
+            typeof entry.url !== 'string') throw new Error('Invalid or duplicate selection row.');
+        seen.add(entry.row);
+        const candidate = candidatesByRow[entry.row]?.find(el =>
+          el.querySelector('.beer-link')?.href === entry.url);
+        if (!candidate || !/^https:\/\/(www\.)?untappd\.com\/b\/[^/]+\/\d+\/?$/.test(entry.url)) {
+          throw new Error('A selection is not an available candidate.');
+        }
+        return {card: cards[entry.row], candidate, row: entry.row, url: entry.url};
+      });
+      entries.forEach(({card, candidate, row, url}) => {
+        if (selections.get(card) === url) return;
+        if (selections.has(card)) card.querySelector('.manual-action').click();
+        choose(card, row, candidate, url, false);
+      });
+      persist();
+      message.textContent = 'Imported ' + entries.length + ' selections. Other choices were kept. ' + message.textContent;
+    } catch (error) {
+      message.textContent = 'Could not import selections: ' + error.message;
+    } finally { importFile.value = ''; }
+  });
   if (storageKey) {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
