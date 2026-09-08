@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="untap-report-title" content="Juova New Arrivals - September 2026">
+  <meta name="untap-report-date" content="2026-09-08">
+  <meta name="untap-total-beers" content="5">
+  <meta name="untap-confirmed-count" content="5">
+  <meta name="untap-review-count" content="0">
+  <meta name="untap-ambiguous-count" content="0">
+  <meta name="untap-failed-count" content="0">
+  <title>Juova New Arrivals - September 2026</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { width: min(900px, 100%); margin: 0 auto; padding: 24px 16px 48px; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    h2 { margin-top: 32px; }
+    h3, h4, p { margin-top: 0; }
+    .summary { margin: 0; opacity: .72; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .status-filters { margin-bottom: 0; }
+    .status-filters + .style-filters { margin-top: 12px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 12%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .beer-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 12px 14px; align-items: start; }
+    .beer-card.has-label { grid-template-columns: 72px 64px minmax(0, 1fr); }
+    .beer-label { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; background: color-mix(in srgb, Canvas 88%, CanvasText 12%); }
+    .label-preview-button { display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: zoom-in; }
+    .label-preview-button:hover { outline: 2px solid LinkText; outline-offset: 2px; }
+    .label-preview-button:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
+    .beer-link { color: LinkText; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, LinkText 55%, transparent); text-underline-offset: .18em; overflow-wrap: anywhere; }
+    .beer-link:hover { text-decoration-color: LinkText; text-decoration-thickness: 2px; }
+    .beer-link:focus-visible { outline: 2px solid LinkText; outline-offset: 3px; border-radius: 2px; }
+    .brewery { margin-bottom: 4px; line-height: 1.4; opacity: .85; }
+    .meta { font-size: .9rem; }
+    .rating-column .ratings-count { font-size: .75rem; margin: 5px 0 0; }
+    .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .production-status { min-height: 1.35em; margin: 6px 0 0; opacity: .72; font-size: .8rem; line-height: 1.35; }
+    .review-group { padding: 16px; }
+    .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .review-heading h3 { margin-bottom: 8px; }
+    .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
+    .candidate-list { margin-top: 12px; }
+    .candidate-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 12px; align-items: start; }
+    .candidate-card.has-label { grid-template-columns: 72px 64px minmax(0, 1fr); }
+    .candidate-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 5px; }
+    .candidate-heading h4 { margin-bottom: 0; }
+    .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
+    .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
+    .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
+    .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
+    .candidate-score { font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+    .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
+    @media (max-width: 520px) {
+      main { padding: 18px 12px 36px; }
+      .beer-card { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
+      .beer-card.has-label .beer-label { width: 54px; height: 54px; }
+      .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+      .candidate-card.has-label { grid-template-columns: 54px 1fr; }
+      .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
+      .candidate-card.has-label .beer-label { width: 54px; height: 54px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Juova New Arrivals - September 2026</h1>
+      <p class="summary">5 beers · 5 confirmed · 0 ambiguous</p>
+    </header>
+
+    <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="stout" checked><span>Stout</span></label></div></fieldset>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Results</h2>
+      <div class="results-list">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776487_d3b0a_hd.jpeg" aria-label="View larger Temporalis #0061 label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776487_d3b0a_sm.jpeg" alt="Temporalis #0061 label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.43</div>
+                <p class="ratings-count">885 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/messorem-temporalis-0061/6776487" target="_blank" rel="noopener noreferrer">Temporalis #0061</a></h3>
+                <p class="brewery">Messorem</p>
+                <p class="meta">10% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6776682_ef729_hd.jpeg" aria-label="View larger Kamo IV label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6776682_ef729_sm.jpeg" alt="Kamo IV label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.38</div>
+                <p class="ratings-count">475 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/lolev-beer-kamo-iv/6776682" target="_blank" rel="noopener noreferrer">Kamo IV</a></h3>
+                <p class="brewery">Lolev Beer</p>
+                <p class="meta">8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6756052_6fd12_hd.jpeg" aria-label="View larger Élixir - BreWskey label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6756052_6fd12_sm.jpeg" alt="Élixir - BreWskey label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.35</div>
+                <p class="ratings-count">683 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/brasserie-du-bas-canada-elixir-brewskey/6756052" target="_blank" rel="noopener noreferrer">Élixir - BreWskey</a></h3>
+                <p class="brewery">Brasserie du Bas-Canada</p>
+                <p class="meta">10% <span aria-hidden="true">·</span> IPA - Triple</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6757340_d9f6e_hd.jpeg" aria-label="View larger Super Saturated label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6757340_d9f6e_sm.jpeg" alt="Super Saturated label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.32</div>
+                <p class="ratings-count">598 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/autodidact-beer-super-saturated/6757340" target="_blank" rel="noopener noreferrer">Super Saturated</a></h3>
+                <p class="brewery">Autodidact Beer</p>
+                <p class="meta">8.1% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="stout">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6586946_0ae41_hd.jpeg" aria-label="View larger Dragon&#x27;s Milk: Triple Mash (2026) label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6586946_0ae41_sm.jpeg" alt="Dragon&#x27;s Milk: Triple Mash (2026) label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.30</div>
+                <p class="ratings-count">2,658 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/new-holland-brewing-dragon-s-milk-triple-mash-2026/6586946" target="_blank" rel="noopener noreferrer">Dragon&#x27;s Milk: Triple Mash (2026)</a></h3>
+                <p class="brewery">New Holland Brewing</p>
+                <p class="meta">17% <span aria-hidden="true">·</span> Stout - Imperial / Double</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            </div>
+    </section>
+  </main>
+  <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
+    <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
+    <img alt="" referrerpolicy="no-referrer">
+  </dialog>
+  <script>
+    (function () {
+      const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
+      const statusFilters = Array.from(document.querySelectorAll('input[data-status-filter]'));
+
+      const beerCards = Array.from(document.querySelectorAll('.beer-card'));
+      const candidateCards = Array.from(document.querySelectorAll('.candidate-card'));
+      const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
+
+      function applyStyleFilters() {
+        const enabled = new Set(
+          filters.filter((filter) => filter.checked).map((filter) => filter.value)
+        );
+
+        const selectedStatus = statusFilters.find((filter) => filter.checked).value;
+        const statusVisible = (card) => selectedStatus === 'all' || card.dataset.status === selectedStatus;
+
+        beerCards.forEach((card) => {
+          const styleVisible = !card.dataset.styleGroup || enabled.has(card.dataset.styleGroup);
+          card.hidden = !styleVisible || !statusVisible(card);
+        });
+
+        candidateCards.forEach((card) => {
+          card.hidden = Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup);
+        });
+
+        reviewGroups.forEach((group) => {
+          const candidates = Array.from(group.querySelectorAll('.candidate-card'));
+          group.hidden = !statusVisible(group) ||
+            (candidates.length && candidates.every((candidate) => candidate.hidden));
+        });
+      }
+
+      filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      statusFilters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      applyStyleFilters();
+
+      const dialog = document.getElementById('label-dialog');
+      const dialogImage = dialog.querySelector('img');
+      const closeButton = dialog.querySelector('.label-dialog-close');
+      let opener = null;
+
+      document.querySelectorAll('[data-label-preview]').forEach((button) => {
+        button.addEventListener('click', () => {
+          opener = button;
+          dialogImage.src = button.dataset.labelPreview;
+          dialogImage.alt = button.querySelector('img').alt;
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else window.open(button.dataset.labelPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        dialogImage.removeAttribute('src');
+        if (opener) opener.focus();
+      });
+    })();
+  </script>
+  <meta name="untap-selection-report-id" content="78470fa45fba4963cc5cde381c1b1219b65f4c1f75ee836c3d99ac0761aedc06">
+  <script id="manual-review-script">/* Personal, reversible review. Does not modify the shared report or CSV. */
+(async function () {
+  const list = document.querySelector('.results-list');
+  const summary = document.querySelector('.summary');
+  const originalSummary = summary.textContent;
+  const cards = Array.from(list.children);
+  const choices = {};
+  const original = new Map();
+  const selections = new Map();
+  const candidatesByRow = cards.map(card => card.dataset.status === 'ambiguous'
+    ? Array.from(card.querySelectorAll('.candidate-card')) : []);
+  if (!cards.some(card => card.dataset.status === 'ambiguous')) return;
+  const styles = document.createElement('style');
+  styles.textContent = `
+    .manual-toolbar { margin: 20px 0; padding: 14px; border: 1px solid GrayText; border-radius: 12px; }
+    .manual-toolbar p { margin-bottom: 8px; }
+    .manual-action { font: inherit; padding: 7px 12px; border: 1px solid GrayText; border-radius: 8px; color: CanvasText; background: Canvas; cursor: pointer; margin: 6px 6px 0 0; }
+    .manual-action:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .manual-note { font-size: .85rem; margin: 6px 0; }
+    .manual-flash { outline: 2px solid LinkText; outline-offset: 3px; }
+    .candidate-list { grid-auto-rows: 1fr; }
+    .already-matched-note, .manually-confirmed-tag { display: inline-block; font-size: .75rem; padding: 3px 7px; border: 1px solid GrayText; border-radius: 999px; vertical-align: middle; margin: 6px 0 0 4px; }
+  `;
+  document.head.append(styles);
+  const toolbar = document.createElement('section');
+  toolbar.className = 'manual-toolbar';
+  const explanation = document.createElement('p');
+  explanation.textContent = 'Personal review — choices apply only in this browser. They do not change the shared report or CSV, or affect other visitors. Export selections to keep a record.';
+  const message = document.createElement('p');
+  message.setAttribute('role', 'status');
+  toolbar.append(explanation, message);
+  document.querySelector('header').after(toolbar);
+  const button = (text, action) => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'manual-action'; el.textContent = text;
+    el.addEventListener('click', action); return el;
+  };
+  const rating = card => {
+    const el = card.querySelector('.rating-badge');
+    const number = Number.parseFloat(el ? el.textContent : '');
+    return Number.isFinite(number) ? number : -Infinity;
+  };
+  const baselineRatings = new Map(cards.map(card => [card, rating(card)]));
+  // Hash the original report, not its filesystem path or title alone.
+  let reportId = null;
+  let storageKey = null;
+  try {
+    const bytes = new TextEncoder().encode(list.innerHTML + originalSummary + document.title);
+    const hash = await crypto.subtle.digest('SHA-256', bytes);
+    reportId = document.querySelector('meta[name="untap-selection-report-id"]')?.content ||
+      Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('');
+    storageKey = 'untap-review-v1:' + reportId;
+  } catch (_) {
+    message.textContent = 'Browser saving is unavailable here. Export your selections before closing.';
+  }
+  function updateAlreadyMatchedHints() {
+    const beerId = card => {
+      const link = card.querySelector('.beer-link');
+      if (!link) return null;
+      try {
+        const url = new URL(link.href);
+        if (!['untappd.com', 'www.untappd.com'].includes(url.hostname)) return null;
+        const match = url.pathname.match(/\/b\/[^/]+\/(\d+)\/?$/);
+        return match ? match[1] : null;
+      } catch (_) { return null; }
+    };
+    const confirmed = cards.filter(card => card.dataset.status === 'ok');
+    cards.filter(card => card.dataset.status === 'ambiguous').forEach(group => {
+      group.querySelectorAll('.candidate-card').forEach(candidate => {
+        candidate.querySelectorAll('.already-matched-note').forEach(note => note.remove());
+        const id = beerId(candidate);
+        if (!id || !confirmed.some(card => card !== group && beerId(card) === id)) return;
+        const note = document.createElement('span');
+        note.className = 'manual-note already-matched-note';
+        note.textContent = 'Already matched';
+        note.title = 'Already matched to another menu item';
+        note.setAttribute('aria-label', note.title);
+        const content = candidate.lastElementChild;
+        content.append(note);
+      });
+    });
+  }
+  function refresh() {
+    updateAlreadyMatchedHints();
+    cards.slice().sort((a, b) => {
+      const ar = selections.has(a) ? rating(a) : baselineRatings.get(a);
+      const br = selections.has(b) ? rating(b) : baselineRatings.get(b);
+      return (br > ar ? 1 : br < ar ? -1 : 0) || cards.indexOf(a) - cards.indexOf(b);
+    }).forEach(card => list.append(card));
+    const count = status => cards.filter(card => card.dataset.status === status).length;
+    const other = cards.length - count('ok') - count('ambiguous') - count('failed');
+    summary.textContent = `${cards.length} beers · ${count('ok')} confirmed (${selections.size} manually) · ${count('ambiguous')} ambiguous` +
+      (count('failed') ? ` · ${count('failed')} failed` : '') + (other ? ` · ${other} unresolved` : '');
+    // Existing filtering handlers retain references to the original group elements.
+    const all = document.querySelector('input[data-status-filter]:checked');
+    if (all) all.dispatchEvent(new Event('change'));
+    // Selected cards no longer contain candidate cards; apply their own style.
+    const enabled = new Set(Array.from(document.querySelectorAll('input[data-style-filter]:checked'), el => el.value));
+    selections.forEach((_, card) => {
+      card.hidden = (all && all.value !== 'all' && all.value !== 'ok') ||
+        (Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup));
+    });
+  }
+  function persist() {
+    try {
+      if (!storageKey) throw new Error();
+      localStorage.setItem(storageKey, JSON.stringify(choices));
+      message.textContent = 'Choices saved in this browser. Export to keep them outside the browser.';
+    } catch (_) {
+      message.textContent = 'Browser saving is unavailable. Export your selections before closing.';
+    }
+  }
+  function focusCard(card, control) {
+    const all = document.querySelector('input[data-status-filter][value="all"]');
+    if (all) { all.checked = true; all.dispatchEvent(new Event('change')); }
+    const style = Array.from(document.querySelectorAll('input[data-style-filter]')).find(el => el.value === card.dataset.styleGroup);
+    if (style && !style.checked) { style.checked = true; style.dispatchEvent(new Event('change')); }
+    card.hidden = false;
+    control.focus({preventScroll: true});
+    card.scrollIntoView({block: 'nearest', behavior: 'auto'});
+    card.classList.add('manual-flash');
+    setTimeout(() => card.classList.remove('manual-flash'), 1500);
+  }
+  function choose(card, index, candidate, url, interactive = true) {
+    if (selections.has(card)) return;
+    original.set(card, {nodes: Array.from(card.childNodes), className: card.className});
+    card.replaceChildren();
+    card.className = 'beer-card' + (candidate.querySelector('.beer-label') ? ' has-label' : '');
+    card.dataset.status = 'ok';
+    card.dataset.styleGroup = candidate.dataset.styleGroup || '';
+    // Move the original nodes so thumbnail preview listeners remain attached.
+    const nodes = Array.from(candidate.childNodes);
+    nodes.forEach(node => card.append(node));
+    const content = card.lastElementChild;
+    content.querySelectorAll('.manual-action, .already-matched-note').forEach(el => el.remove());
+    const note = document.createElement('span'); note.className = 'manual-note manually-confirmed-tag';
+    note.textContent = 'Manually confirmed';
+    const undo = button('Change selection', () => {
+      note.remove(); undo.remove();
+      nodes.forEach(node => candidate.append(node));
+      const previous = original.get(card);
+      card.replaceChildren(...previous.nodes); card.className = previous.className;
+      card.dataset.status = 'ambiguous'; delete card.dataset.styleGroup;
+      selections.delete(card); delete choices[index];
+      addButtons(card, index); refresh(); persist();
+      focusCard(card, card.querySelector('.manual-action'));
+    });
+    content.append(undo, note);
+    selections.set(card, url); choices[index] = url;
+    refresh();
+    if (interactive) { persist(); focusCard(card, undo); }
+  }
+  function addButtons(card, index) {
+    card.querySelectorAll('.candidate-card').forEach(candidate => {
+      if (candidate.querySelector('.manual-action')) return;
+      const link = candidate.querySelector('.beer-link');
+      if (!link) return;
+      const url = new URL(link.href);
+      if (url.protocol !== 'https:' || !['untappd.com', 'www.untappd.com'].includes(url.hostname) || !/\/b\/[^/]+\/\d+\/?$/.test(url.pathname)) return;
+      candidate.lastElementChild.append(button('Confirm this beer', () => choose(card, index, candidate, url.href)));
+    });
+  }
+  cards.forEach((card, index) => { if (card.dataset.status === 'ambiguous') addButtons(card, index); });
+  cards.forEach((card, index) => {
+    const url = card.dataset.initialSelection;
+    const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === url);
+    if (candidate) choose(card, index, candidate, url, false);
+  });
+  toolbar.append(button('Export selections', () => {
+    const payload = {format: 'untap-manual-review-trial-v1', report_id: reportId,
+      title: document.title, selections: Object.entries(choices).map(([index, url]) => ({row: Number(index), url}))};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = 'untap-selections.json'; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }));
+  updateAlreadyMatchedHints();
+  const importFile = document.createElement('input');
+  importFile.type = 'file'; importFile.accept = '.json,application/json'; importFile.hidden = true;
+  toolbar.append(importFile, button('Import selections', () => importFile.click()));
+  importFile.addEventListener('change', async () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    try {
+      if (file.size > 1000000) throw new Error('File is too large.');
+      const payload = JSON.parse(await file.text());
+      if (!payload || payload.format !== 'untap-manual-review-trial-v1' ||
+          !reportId || payload.report_id !== reportId || !Array.isArray(payload.selections)) {
+        throw new Error('This is not a selections file for this exact report.');
+      }
+      const seen = new Set();
+      // Validate the entire file before changing any choices.
+      const entries = payload.selections.map(entry => {
+        if (!entry || !Number.isInteger(entry.row) || seen.has(entry.row) ||
+            typeof entry.url !== 'string') throw new Error('Invalid or duplicate selection row.');
+        seen.add(entry.row);
+        const candidate = candidatesByRow[entry.row]?.find(el =>
+          el.querySelector('.beer-link')?.href === entry.url);
+        if (!candidate || !/^https:\/\/(www\.)?untappd\.com\/b\/[^/]+\/\d+\/?$/.test(entry.url)) {
+          throw new Error('A selection is not an available candidate.');
+        }
+        return {card: cards[entry.row], candidate, row: entry.row, url: entry.url};
+      });
+      entries.forEach(({card, candidate, row, url}) => {
+        if (selections.get(card) === url) return;
+        if (selections.has(card)) card.querySelector('.manual-action').click();
+        choose(card, row, candidate, url, false);
+      });
+      persist();
+      message.textContent = 'Imported ' + entries.length + ' selections. Other choices were kept. ' + message.textContent;
+    } catch (error) {
+      message.textContent = 'Could not import selections: ' + error.message;
+    } finally { importFile.value = ''; }
+  });
+  if (storageKey) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      cards.forEach((card, index) => {
+        if (typeof saved[index] !== 'string') return;
+        const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === saved[index]);
+        if (candidate && selections.has(card) && selections.get(card) !== saved[index]) card.querySelector('.manual-action').click();
+        if (candidate) choose(card, index, candidate, saved[index], false);
+      });
+      if (selections.size) message.textContent = 'Restored your choices for this report.';
+    } catch (_) { message.textContent = 'Saved choices could not be loaded; the original report is shown.'; }
+  }
+  // Run after the report's existing handlers, including after future filter changes.
+  document.querySelectorAll('input[data-style-filter], input[data-status-filter]').forEach(el => el.addEventListener('change', () => {
+    const status = document.querySelector('input[data-status-filter]:checked')?.value || 'all';
+    const enabled = new Set(Array.from(document.querySelectorAll('input[data-style-filter]:checked'), input => input.value));
+    selections.forEach((_, card) => { card.hidden = (status !== 'all' && status !== 'ok') || (Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup)); });
+  }));
+})();
+</script>
+</body>
+</html>
