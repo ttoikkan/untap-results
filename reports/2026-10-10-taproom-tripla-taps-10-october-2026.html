@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="untap-report-title" content="Taproom Tripla Taps - 10 October 2026">
+  <meta name="untap-report-date" content="2026-10-10">
+  <meta name="untap-total-beers" content="17">
+  <meta name="untap-confirmed-count" content="17">
+  <meta name="untap-review-count" content="0">
+  <meta name="untap-ambiguous-count" content="0">
+  <meta name="untap-failed-count" content="0">
+  <title>Taproom Tripla Taps - 10 October 2026</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { width: min(900px, 100%); margin: 0 auto; padding: 24px 16px 48px; }
+    header { margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    h2 { margin-top: 32px; }
+    h3, h4, p { margin-top: 0; }
+    .summary { margin: 0; opacity: .72; }
+    .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
+    .status-filters { margin-bottom: 0; }
+    .status-filters + .style-filters { margin-top: 12px; }
+    .style-filters legend { padding: 0 7px; font-size: 1.08rem; font-weight: 700; }
+    .style-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .style-chip { position: relative; cursor: pointer; }
+    .style-chip input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+    .style-chip span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; background: color-mix(in srgb, Canvas 92%, CanvasText 8%); color: color-mix(in srgb, CanvasText 76%, Canvas 24%); font-weight: 600; transition: background-color 150ms, border-color 150ms, color 150ms, box-shadow 150ms; }
+    .style-chip span::before { content: "✓"; width: 0; margin-right: 0; overflow: hidden; color: LinkText; font-size: 1.08em; transition: width 150ms, margin-right 150ms; }
+    .style-chip input:checked + span { border-color: LinkText; background: color-mix(in srgb, Canvas 88%, LinkText 12%); color: CanvasText; }
+    .style-chip input:checked + span::before { width: 1em; margin-right: 8px; }
+    .style-chip:hover span { border-color: LinkText; }
+    .style-chip input:focus-visible + span { outline: 3px solid LinkText; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .results-list, .candidate-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .beer-card, .candidate-card, .review-group { border: 1px solid color-mix(in srgb, CanvasText 12%, transparent); border-radius: 14px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .beer-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 12px 14px; align-items: start; }
+    .beer-card.has-label { grid-template-columns: 72px 64px minmax(0, 1fr); }
+    .beer-label { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; background: color-mix(in srgb, Canvas 88%, CanvasText 12%); }
+    .label-preview-button { display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: zoom-in; }
+    .label-preview-button:hover { outline: 2px solid LinkText; outline-offset: 2px; }
+    .label-preview-button:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .rating-badge { font-size: 1.35rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .beer-content h3, .candidate-card h4 { margin-bottom: 5px; }
+    .beer-link { color: LinkText; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, LinkText 55%, transparent); text-underline-offset: .18em; overflow-wrap: anywhere; }
+    .beer-link:hover { text-decoration-color: LinkText; text-decoration-thickness: 2px; }
+    .beer-link:focus-visible { outline: 2px solid LinkText; outline-offset: 3px; border-radius: 2px; }
+    .brewery { margin-bottom: 4px; line-height: 1.4; opacity: .85; }
+    .meta { font-size: .9rem; }
+    .rating-column .ratings-count { font-size: .75rem; margin: 5px 0 0; }
+    .meta, .ratings-count, .review-reason { margin-bottom: 4px; opacity: .75; line-height: 1.4; }
+    .review-group > .menu-abv, .review-group > .review-reason { font-size: .9rem; margin: 0 0 4px; }
+    .production-status { min-height: 1.35em; margin: 6px 0 0; opacity: .72; font-size: .8rem; line-height: 1.35; }
+    .review-group { padding: 16px; }
+    .review-heading { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .review-heading h3 { margin-bottom: 8px; }
+    .status-pill { border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 700; opacity: .78; }
+    .candidate-list { margin-top: 12px; }
+    .candidate-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 12px; align-items: start; }
+    .candidate-card.has-label { grid-template-columns: 72px 64px minmax(0, 1fr); }
+    .candidate-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 5px; }
+    .candidate-heading h4 { margin-bottom: 0; }
+    .label-dialog { width: min(92vw, 820px); max-height: 92vh; padding: 44px 18px 18px; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; background: Canvas; color: CanvasText; }
+    .label-dialog::backdrop { background: rgb(0 0 0 / 78%); }
+    .label-dialog img { display: block; width: 100%; max-height: calc(92vh - 62px); object-fit: contain; }
+    .label-dialog-close { position: absolute; top: 10px; right: 10px; min-width: 34px; min-height: 34px; border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); border-radius: 999px; background: Canvas; color: CanvasText; cursor: pointer; font-size: 1.2rem; }
+    .candidate-score { font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+    .empty { opacity: .65; font-style: italic; }
+    @media (prefers-reduced-motion: reduce) {
+      .style-chip span, .style-chip span::before { transition: none; }
+    }
+    @media (max-width: 520px) {
+      main { padding: 18px 12px 36px; }
+      .beer-card { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label { grid-template-columns: 54px 1fr; }
+      .beer-card.has-label .label-preview-button, .beer-card.has-label > .beer-label { grid-row: span 2; }
+      .beer-card.has-label .beer-label { width: 54px; height: 54px; }
+      .candidate-card { grid-template-columns: 1fr; gap: 4px; }
+      .candidate-card.has-label { grid-template-columns: 54px 1fr; }
+      .candidate-card.has-label .label-preview-button, .candidate-card.has-label > .beer-label { grid-row: span 2; }
+      .candidate-card.has-label .beer-label { width: 54px; height: 54px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Taproom Tripla Taps - 10 October 2026</h1>
+      <p class="summary">17 beers · 17 confirmed · 0 ambiguous</p>
+    </header>
+
+    <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
+    <fieldset class="style-filters"><legend>Styles</legend><div class="style-chips"><label class="style-chip" for="style-filter-0"><input id="style-filter-0" type="checkbox" data-style-filter value="festbier" checked><span>Festbier</span></label><label class="style-chip" for="style-filter-1"><input id="style-filter-1" type="checkbox" data-style-filter value="ipa" checked><span>IPA</span></label><label class="style-chip" for="style-filter-2"><input id="style-filter-2" type="checkbox" data-style-filter value="kölsch" checked><span>Kölsch</span></label><label class="style-chip" for="style-filter-3"><input id="style-filter-3" type="checkbox" data-style-filter value="lager" checked><span>Lager</span></label><label class="style-chip" for="style-filter-4"><input id="style-filter-4" type="checkbox" data-style-filter value="pale ale" checked><span>Pale Ale</span></label><label class="style-chip" for="style-filter-5"><input id="style-filter-5" type="checkbox" data-style-filter value="porter" checked><span>Porter</span></label><label class="style-chip" for="style-filter-6"><input id="style-filter-6" type="checkbox" data-style-filter value="sour" checked><span>Sour</span></label><label class="style-chip" for="style-filter-7"><input id="style-filter-7" type="checkbox" data-style-filter value="table beer" checked><span>Table Beer</span></label></div></fieldset>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Results</h2>
+      <div class="results-list">
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5355171_1964c_hd.jpeg" aria-label="View larger All Seeing label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5355171_955d6_sm.jpeg" alt="All Seeing label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.36</div>
+                <p class="ratings-count">1,006 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/monkish-brewing-co-all-seeing/5355171" target="_blank" rel="noopener noreferrer">All Seeing</a></h3>
+                <p class="brewery">Monkish Brewing Co.</p>
+                <p class="meta">10.2% <span aria-hidden="true">·</span> IPA - Triple New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6919515_6b4a0_hd.jpeg" aria-label="View larger Fixed Expressions label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6919515_6b4a0_sm.jpeg" alt="Fixed Expressions label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.31</div>
+                <p class="ratings-count">50 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/factory-brewing-fixed-expressions/6919515" target="_blank" rel="noopener noreferrer">Fixed Expressions</a></h3>
+                <p class="brewery">Factory Brewing</p>
+                <p class="meta">8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <img class="beer-label" src="https://assets.untappd.com/site/brewery_logos/brewery-MonkishBrewingCo_21152.jpeg" alt="Dope Rope label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true">
+              <div class="rating-column"><div class="rating-badge">4.26</div>
+                <p class="ratings-count">476 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/monkish-brewing-co-dope-rope/6829868" target="_blank" rel="noopener noreferrer">Dope Rope</a></h3>
+                <p class="brewery">Monkish Brewing Co.</p>
+                <p class="meta">8.5% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6826117_814ac_hd.jpeg" aria-label="View larger Mind Games label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6826117_814ac_sm.jpeg" alt="Mind Games label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.08</div>
+                <p class="ratings-count">497 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/factory-brewing-mind-games/6826117" target="_blank" rel="noopener noreferrer">Mind Games</a></h3>
+                <p class="brewery">Factory Brewing</p>
+                <p class="meta">8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6819212_ff3c3_hd.jpeg" aria-label="View larger Forest Folly label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6819212_ff3c3_sm.jpeg" alt="Forest Folly label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.06</div>
+                <p class="ratings-count">975 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/sudden-death-brewing-co-forest-folly/6819212" target="_blank" rel="noopener noreferrer">Forest Folly</a></h3>
+                <p class="brewery">Sudden Death Brewing Co.</p>
+                <p class="meta">8% <span aria-hidden="true">·</span> IPA - Imperial / Double New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6772388_460ec_hd.jpeg" aria-label="View larger Rabbit Hole label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6772388_460ec_sm.jpeg" alt="Rabbit Hole label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">4.01</div>
+                <p class="ratings-count">964 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/factory-brewing-rabbit-hole/6772388" target="_blank" rel="noopener noreferrer">Rabbit Hole</a></h3>
+                <p class="brewery">Factory Brewing</p>
+                <p class="meta">7.3% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6826124_f8ba6_hd.jpeg" aria-label="View larger Clarity Of... Nelson Sauvin label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6826124_f8ba6_sm.jpeg" alt="Clarity Of... Nelson Sauvin label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.99</div>
+                <p class="ratings-count">147 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/factory-brewing-clarity-of-nelson-sauvin/6826124" target="_blank" rel="noopener noreferrer">Clarity Of... Nelson Sauvin</a></h3>
+                <p class="brewery">Factory Brewing</p>
+                <p class="meta">7.3% <span aria-hidden="true">·</span> IPA - American</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="ipa">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6819213_29201_hd.jpeg" aria-label="View larger Meister Cheese label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6819213_29201_sm.jpeg" alt="Meister Cheese label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.93</div>
+                <p class="ratings-count">823 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/sudden-death-brewing-co-meister-cheese/6819213" target="_blank" rel="noopener noreferrer">Meister Cheese</a></h3>
+                <p class="brewery">Sudden Death Brewing Co.</p>
+                <p class="meta">6% <span aria-hidden="true">·</span> IPA - New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="pale ale">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-4711465_b8f7c_hd.jpeg" aria-label="View larger From Above label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-4711465_b8f7c_sm.jpeg" alt="From Above label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.76</div>
+                <p class="ratings-count">6,569 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/track-brewing-company-from-above/4711465" target="_blank" rel="noopener noreferrer">From Above</a></h3>
+                <p class="brewery">Track Brewing Company</p>
+                <p class="meta">4.1% <span aria-hidden="true">·</span> Pale Ale - New England / Hazy</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="table beer">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5688696_f9eea_hd.jpeg" aria-label="View larger NZ Table Beer label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5688696_f9eea_sm.jpeg" alt="NZ Table Beer label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.64</div>
+                <p class="ratings-count">582 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/lhg-brewpub-nz-table-beer/5688696" target="_blank" rel="noopener noreferrer">NZ Table Beer</a></h3>
+                <p class="brewery">LHG Brewpub</p>
+                <p class="meta">2.8% <span aria-hidden="true">·</span> Table Beer</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6901738_a845a_hd.jpeg" aria-label="View larger Persikka Mango Vanilja Sour label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6901738_a845a_sm.jpeg" alt="Persikka Mango Vanilja Sour label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.49</div>
+                <p class="ratings-count">28 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-persikka-mango-vanilja-sour/6901738" target="_blank" rel="noopener noreferrer">Persikka Mango Vanilja Sour</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="festbier">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-5988728_5ae24_hd.jpeg" aria-label="View larger Fest Nutrition label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-5988728_5ae24_sm.jpeg" alt="Fest Nutrition label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.46</div>
+                <p class="ratings-count">773 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/panimoyhtio-tuju-fest-nutrition/5988728" target="_blank" rel="noopener noreferrer">Fest Nutrition</a></h3>
+                <p class="brewery">Panimoyhtiö Tuju</p>
+                <p class="meta">6% <span aria-hidden="true">·</span> Festbier</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="porter">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6622407_7eb91_hd.jpeg" aria-label="View larger Portteri label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6622407_7eb91_sm.jpeg" alt="Portteri label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.43</div>
+                <p class="ratings-count">140 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-portteri/6622407" target="_blank" rel="noopener noreferrer">Portteri</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">5% <span aria-hidden="true">·</span> Porter - Other</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="sour">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6533778_d3b38_hd.jpeg" aria-label="View larger Mansikka &amp; Mustaherukka Sour label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6533778_d3b38_sm.jpeg" alt="Mansikka &amp; Mustaherukka Sour label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.32</div>
+                <p class="ratings-count">278 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-mansikka-and-mustaherukka-sour/6533778" target="_blank" rel="noopener noreferrer">Mansikka &amp; Mustaherukka Sour</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">5% <span aria-hidden="true">·</span> Sour - Fruited</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="lager">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6137398_6abfc_hd.jpeg" aria-label="View larger House Lager label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6137398_601b0_sm.jpeg" alt="House Lager label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.30</div>
+                <p class="ratings-count">310 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-house-lager/6137398" target="_blank" rel="noopener noreferrer">House Lager</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">5% <span aria-hidden="true">·</span> Lager - American</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="kölsch">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-6817134_2da17_hd.jpeg" aria-label="View larger Appelsiini Kölssi label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-6817134_2da17_sm.jpeg" alt="Appelsiini Kölssi label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">3.26</div>
+                <p class="ratings-count">123 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-appelsiini-kolssi/6817134" target="_blank" rel="noopener noreferrer">Appelsiini Kölssi</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">5% <span aria-hidden="true">·</span> Kölsch</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            
+            <article class="beer-card has-label" data-status="ok" data-style-group="table beer">
+              <button class="label-preview-button" type="button" data-label-preview="https://assets.untappd.com/site/beer_logos_hd/beer-7126449_91473_hd.jpeg" aria-label="View larger Table Beer label"><img class="beer-label" src="https://assets.untappd.com/site/beer_logos/beer-7126449_d34a5_sm.jpeg" alt="Table Beer label" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true"></button>
+              <div class="rating-column"><div class="rating-badge">0.00</div>
+                <p class="ratings-count">1 ratings</p></div>
+              <div class="beer-content">
+                <h3><a class="beer-link" href="https://untappd.com/b/etko-brewing-table-beer/7126449" target="_blank" rel="noopener noreferrer">Table Beer</a></h3>
+                <p class="brewery">ETKO Brewing</p>
+                <p class="meta">3.5% <span aria-hidden="true">·</span> Table Beer</p>
+                <p class="production-status">Listed as in production on Untappd</p>
+              </div>
+            </article>
+            </div>
+    </section>
+  </main>
+  <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
+    <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
+    <img alt="" referrerpolicy="no-referrer">
+  </dialog>
+  <script>
+    (function () {
+      const filters = Array.from(document.querySelectorAll('input[data-style-filter]'));
+      const statusFilters = Array.from(document.querySelectorAll('input[data-status-filter]'));
+
+      const beerCards = Array.from(document.querySelectorAll('.beer-card'));
+      const candidateCards = Array.from(document.querySelectorAll('.candidate-card'));
+      const reviewGroups = Array.from(document.querySelectorAll('.review-group'));
+
+      function applyStyleFilters() {
+        const enabled = new Set(
+          filters.filter((filter) => filter.checked).map((filter) => filter.value)
+        );
+
+        const selectedStatus = statusFilters.find((filter) => filter.checked).value;
+        const statusVisible = (card) => selectedStatus === 'all' || card.dataset.status === selectedStatus;
+
+        beerCards.forEach((card) => {
+          const styleVisible = !card.dataset.styleGroup || enabled.has(card.dataset.styleGroup);
+          card.hidden = !styleVisible || !statusVisible(card);
+        });
+
+        candidateCards.forEach((card) => {
+          card.hidden = Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup);
+        });
+
+        reviewGroups.forEach((group) => {
+          const candidates = Array.from(group.querySelectorAll('.candidate-card'));
+          group.hidden = !statusVisible(group) ||
+            (candidates.length && candidates.every((candidate) => candidate.hidden));
+        });
+      }
+
+      filters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      statusFilters.forEach((filter) => filter.addEventListener('change', applyStyleFilters));
+      applyStyleFilters();
+
+      const dialog = document.getElementById('label-dialog');
+      const dialogImage = dialog.querySelector('img');
+      const closeButton = dialog.querySelector('.label-dialog-close');
+      let opener = null;
+
+      document.querySelectorAll('[data-label-preview]').forEach((button) => {
+        button.addEventListener('click', () => {
+          opener = button;
+          dialogImage.src = button.dataset.labelPreview;
+          dialogImage.alt = button.querySelector('img').alt;
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else window.open(button.dataset.labelPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        dialogImage.removeAttribute('src');
+        if (opener) opener.focus();
+      });
+    })();
+  </script>
+  <meta name="untap-selection-report-id" content="1437a38acd043b1adde12a0c51eb6bee5bd9b64b0489b36fae9b6df64016879a">
+  <script id="manual-review-script">/* Personal, reversible review. Does not modify the shared report or CSV. */
+(async function () {
+  const local = window.untapLocalReview || null;
+  let dirty = Boolean(local?.unsavedCandidates);
+  let busy = false;
+  const list = document.querySelector('.results-list');
+  const summary = document.querySelector('.summary');
+  const originalSummary = summary.textContent;
+  const cards = Array.from(list.children);
+  const choices = {};
+  const pending = {};
+  const pendingForms = new Map();
+  const original = new Map();
+  const selections = new Map();
+  const candidatesByRow = cards.map(card => card.dataset.status === 'ambiguous'
+    ? Array.from(card.querySelectorAll('.candidate-card')) : []);
+  if (!local && !cards.some(card => ['ambiguous', 'failed'].includes(card.dataset.status))) return;
+  const styles = document.createElement('style');
+  styles.textContent = `
+    .manual-toolbar { margin: 20px 0; padding: 14px; border: 1px solid GrayText; border-radius: 12px; }
+    .manual-toolbar p { margin-bottom: 8px; overflow-wrap: anywhere; }
+    .manual-action { font: inherit; padding: 7px 12px; border: 1px solid GrayText; border-radius: 8px; color: CanvasText; background: Canvas; cursor: pointer; margin: 6px 6px 0 0; }
+    .manual-action:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
+    .manual-note { font-size: .85rem; margin: 6px 0; }
+    .candidate-url-input { box-sizing: border-box; width: min(100%, 36rem); font: inherit; padding: 8px; }
+    .pending-url { overflow-wrap: anywhere; }
+    .manual-flash { outline: 2px solid LinkText; outline-offset: 3px; }
+    .candidate-list { grid-auto-rows: 1fr; }
+    .already-matched-note, .manually-confirmed-tag { display: inline-block; font-size: .75rem; padding: 3px 7px; border: 1px solid GrayText; border-radius: 999px; vertical-align: middle; margin: 6px 0 0 4px; }
+  `;
+  document.head.append(styles);
+  const toolbar = document.createElement('section');
+  toolbar.className = 'manual-toolbar';
+  const explanation = document.createElement('p');
+  explanation.textContent = 'Personal review — choices apply only in this browser. They do not change the shared report or CSV, or affect other visitors. Export selections to keep a record.';
+  if (local) explanation.textContent = 'Local review — URL additions fetch from Untappd immediately. Confirm your choices, then Save reviewed run to create new HTML, CSV and JSON. The source and published reports stay unchanged.';
+  const message = document.createElement('p');
+  message.setAttribute('role', 'status');
+  toolbar.append(explanation, message);
+  if (dirty) message.textContent = 'Fetched candidates are ready for review. Save reviewed run to keep them.';
+  if (local) window.addEventListener('beforeunload', event => {
+    if (dirty || busy) { event.preventDefault(); event.returnValue = ''; }
+  });
+  document.querySelector('header').after(toolbar);
+  const button = (text, action) => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'manual-action'; el.textContent = text;
+    el.addEventListener('click', action); return el;
+  };
+  const rating = card => {
+    const el = card.querySelector('.rating-badge');
+    const number = Number.parseFloat(el ? el.textContent : '');
+    return Number.isFinite(number) ? number : -Infinity;
+  };
+  const baselineRatings = new Map(cards.map(card => [card, rating(card)]));
+  // Hash the original report, not its filesystem path or title alone.
+  let reportId = null;
+  let storageKey = null;
+  try {
+    const bytes = new TextEncoder().encode(list.innerHTML + originalSummary + document.title);
+    const hash = await crypto.subtle.digest('SHA-256', bytes);
+    reportId = document.querySelector('meta[name="untap-selection-report-id"]')?.content ||
+      Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('');
+    storageKey = 'untap-review-v1:' + reportId;
+  } catch (_) {
+    message.textContent = 'Browser saving is unavailable here. Export your selections before closing.';
+  }
+  function updateAlreadyMatchedHints() {
+    const beerId = card => {
+      const link = card.querySelector('.beer-link');
+      if (!link) return null;
+      try {
+        const url = new URL(link.href);
+        if (!['untappd.com', 'www.untappd.com'].includes(url.hostname)) return null;
+        const match = url.pathname.match(/\/b\/[^/]+\/(\d+)\/?$/);
+        return match ? match[1] : null;
+      } catch (_) { return null; }
+    };
+    const confirmed = cards.filter(card => card.dataset.status === 'ok');
+    cards.filter(card => card.dataset.status === 'ambiguous').forEach(group => {
+      group.querySelectorAll('.candidate-card').forEach(candidate => {
+        candidate.querySelectorAll('.already-matched-note').forEach(note => note.remove());
+        const id = beerId(candidate);
+        if (!id || !confirmed.some(card => card !== group && beerId(card) === id)) return;
+        const note = document.createElement('span');
+        note.className = 'manual-note already-matched-note';
+        note.textContent = 'Already matched';
+        note.title = 'Already matched to another menu item';
+        note.setAttribute('aria-label', note.title);
+        const content = candidate.lastElementChild;
+        content.append(note);
+      });
+    });
+  }
+  function refresh() {
+    updateAlreadyMatchedHints();
+    cards.slice().sort((a, b) => {
+      const ar = selections.has(a) ? rating(a) : baselineRatings.get(a);
+      const br = selections.has(b) ? rating(b) : baselineRatings.get(b);
+      return (br > ar ? 1 : br < ar ? -1 : 0) || cards.indexOf(a) - cards.indexOf(b);
+    }).forEach(card => list.append(card));
+    const count = status => cards.filter(card => card.dataset.status === status).length;
+    const other = cards.length - count('ok') - count('ambiguous') - count('failed');
+    summary.textContent = `${cards.length} beers · ${count('ok')} confirmed (${selections.size} manually) · ${count('ambiguous')} ambiguous` +
+      (count('failed') ? ` · ${count('failed')} failed` : '') + (other ? ` · ${other} unresolved` : '');
+    // Existing filtering handlers retain references to the original group elements.
+    const all = document.querySelector('input[data-status-filter]:checked');
+    if (all) all.dispatchEvent(new Event('change'));
+    // Selected cards no longer contain candidate cards; apply their own style.
+    const enabled = new Set(Array.from(document.querySelectorAll('input[data-style-filter]:checked'), el => el.value));
+    selections.forEach((_, card) => {
+      card.hidden = (all && all.value !== 'all' && all.value !== 'ok') ||
+        (Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup));
+    });
+  }
+  function persist() {
+    if (local) {
+      dirty = true;
+      message.textContent = 'Unsaved choices — use Save reviewed run to keep them.';
+      return;
+    }
+    try {
+      if (!storageKey) throw new Error();
+      localStorage.setItem(storageKey, JSON.stringify(choices));
+      localStorage.setItem(storageKey + ':pending', JSON.stringify(pending));
+      message.textContent = 'Choices saved in this browser. Export to keep them outside the browser.';
+    } catch (_) {
+      message.textContent = 'Browser saving is unavailable. Export your selections before closing.';
+    }
+  }
+  function parsedBeerUrl(value) {
+    const url = new URL(value.trim());
+    const match = url.pathname.match(/^\/b\/([A-Za-z0-9_-]+)\/([1-9][0-9]*)\/?$/);
+    if (url.protocol !== 'https:' || !['untappd.com', 'www.untappd.com'].includes(url.host) ||
+        url.username || url.password || url.search || url.hash || !match) {
+      throw new Error('Use an HTTPS Untappd beer URL without query parameters.');
+    }
+    return {id: match[2], url: 'https://untappd.com/b/' + match[1] + '/' + match[2]};
+  }
+  function validatePending(entries) {
+    if (!Array.isArray(entries) || entries.length > 20) throw new Error('At most 20 pending candidates are allowed.');
+    const seen = new Set();
+    return entries.map(entry => {
+      if (!entry || typeof entry.url !== 'string') throw new Error('Invalid pending URL.');
+      const card = cards.find(el => el.dataset.itemId === entry.item_id);
+      if (!card || !pendingForms.has(card)) throw new Error('Pending candidate has an invalid menu item.');
+      const parsed = parsedBeerUrl(entry.url);
+      const key = entry.item_id + ':' + parsed.id;
+      if (seen.has(key)) throw new Error('Duplicate pending candidate.');
+      seen.add(key);
+      const index = cards.indexOf(card);
+      if (candidatesByRow[index].some(el => {
+        try { return parsedBeerUrl(el.querySelector('.beer-link').href).id === parsed.id; }
+        catch (_) { return false; }
+      })) throw new Error('That beer is already an available candidate.');
+      return {item_id: entry.item_id, url: parsed.url};
+    });
+  }
+  const pendingEntries = () => Object.entries(pending).flatMap(([item_id, urls]) =>
+    urls.map(url => ({item_id, url})));
+  async function localAction(action, additions = []) {
+    if (busy) return;
+    busy = true;
+    const controls = Array.from(document.querySelectorAll('button, input'));
+    const disabled = controls.map(control => control.disabled);
+    controls.forEach(control => { control.disabled = true; });
+    message.textContent = action === 'fetch' ? 'Retrieving candidate from Untappd…' : 'Saving reviewed run…';
+    try {
+      const payload = {format: 'untap-manual-review-trial-v1', report_id: reportId,
+        selections: Object.entries(choices).map(([index, url]) => ({row: Number(index), url})),
+        pending_candidates: additions};
+      const response = await fetch(local.endpoint, {method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-Untap-Token': local.token},
+        body: JSON.stringify({action, payload})});
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Local review request failed');
+      dirty = false;
+      if (result.reload) { busy = false; window.location.reload(); return; }
+      message.textContent = 'Saved reviewed run: ' + result.saved + '. Source and published reports are unchanged.';
+    } catch (error) {
+      message.textContent = 'Could not complete local review: ' + error.message + '. Your current choices are unchanged.';
+    } finally {
+      busy = false;
+      controls.forEach((control, index) => { control.disabled = disabled[index]; });
+    }
+  }
+  if (local) toolbar.append(button('Save reviewed run', () => localAction('save')));
+  function showPending(card) {
+    const container = pendingForms.get(card);
+    container.replaceChildren();
+    (pending[card.dataset.itemId] || []).forEach(url => {
+      const line = document.createElement('p'); line.className = 'pending-url';
+      const link = document.createElement('a');
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = 'Pending candidate: Untappd beer ' + parsedBeerUrl(url).id;
+      line.append(link, document.createTextNode(' — export and refresh to retrieve details. '),
+        button('Remove', () => {
+          pending[card.dataset.itemId] = pending[card.dataset.itemId].filter(value => value !== url);
+          showPending(card); persist();
+        }));
+      container.append(line);
+    });
+  }
+  cards.forEach(card => {
+    if (!['failed', 'ambiguous'].includes(card.dataset.status) || !card.dataset.itemId) return;
+    const section = document.createElement('div');
+    const form = document.createElement('form'); form.hidden = true;
+    const label = document.createElement('label'); label.textContent = 'Untappd beer URL ';
+    const input = document.createElement('input');
+    input.type = 'url'; input.required = true; input.className = 'candidate-url-input';
+    input.placeholder = 'https://untappd.com/b/beer-name/12345';
+    label.append(input);
+    const add = document.createElement('button'); add.type = 'submit'; add.className = 'manual-action'; add.textContent = local ? 'Fetch candidate' : 'Add';
+    const feedback = document.createElement('p'); feedback.setAttribute('role', 'status');
+    const container = document.createElement('div'); pendingForms.set(card, container);
+    form.append(label, add, feedback);
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      try {
+        const entry = {item_id: card.dataset.itemId, url: input.value};
+        const entries = validatePending([...pendingEntries(), entry]);
+        if (local) { await localAction('fetch', entries); return; }
+        pending[entry.item_id] = entries.filter(e => e.item_id === entry.item_id).map(e => e.url);
+        showPending(card); persist(); input.value = ''; form.hidden = true; feedback.textContent = '';
+      } catch (error) { feedback.textContent = error.message; }
+    });
+    section.append(button('Add candidate by URL', () => { form.hidden = !form.hidden; if (!form.hidden) input.focus(); }), form, container);
+    card.append(section);
+  });
+  function focusCard(card, control) {
+    const all = document.querySelector('input[data-status-filter][value="all"]');
+    if (all) { all.checked = true; all.dispatchEvent(new Event('change')); }
+    const style = Array.from(document.querySelectorAll('input[data-style-filter]')).find(el => el.value === card.dataset.styleGroup);
+    if (style && !style.checked) { style.checked = true; style.dispatchEvent(new Event('change')); }
+    card.hidden = false;
+    control.focus({preventScroll: true});
+    card.scrollIntoView({block: 'nearest', behavior: 'auto'});
+    card.classList.add('manual-flash');
+    setTimeout(() => card.classList.remove('manual-flash'), 1500);
+  }
+  function choose(card, index, candidate, url, interactive = true) {
+    if (selections.has(card)) return;
+    original.set(card, {nodes: Array.from(card.childNodes), className: card.className});
+    card.replaceChildren();
+    card.className = 'beer-card' + (candidate.querySelector('.beer-label') ? ' has-label' : '');
+    card.dataset.status = 'ok';
+    card.dataset.styleGroup = candidate.dataset.styleGroup || '';
+    // Move the original nodes so thumbnail preview listeners remain attached.
+    const nodes = Array.from(candidate.childNodes);
+    nodes.forEach(node => card.append(node));
+    const content = card.lastElementChild;
+    content.querySelectorAll('.manual-action, .already-matched-note').forEach(el => el.remove());
+    const note = document.createElement('span'); note.className = 'manual-note manually-confirmed-tag';
+    note.textContent = 'Manually confirmed';
+    const undo = button('Change selection', () => {
+      note.remove(); undo.remove();
+      nodes.forEach(node => candidate.append(node));
+      const previous = original.get(card);
+      card.replaceChildren(...previous.nodes); card.className = previous.className;
+      card.dataset.status = 'ambiguous'; delete card.dataset.styleGroup;
+      selections.delete(card); delete choices[index];
+      addButtons(card, index); refresh(); persist();
+      focusCard(card, card.querySelector('.manual-action'));
+    });
+    content.append(undo, note);
+    selections.set(card, url); choices[index] = url;
+    refresh();
+    if (interactive) { persist(); focusCard(card, undo); }
+  }
+  function addButtons(card, index) {
+    card.querySelectorAll('.candidate-card').forEach(candidate => {
+      if (candidate.querySelector('.manual-action')) return;
+      const link = candidate.querySelector('.beer-link');
+      if (!link) return;
+      const url = new URL(link.href);
+      if (url.protocol !== 'https:' || !['untappd.com', 'www.untappd.com'].includes(url.hostname) || !/\/b\/[^/]+\/\d+\/?$/.test(url.pathname)) return;
+      candidate.lastElementChild.append(button('Confirm this beer', () => choose(card, index, candidate, url.href)));
+    });
+  }
+  cards.forEach((card, index) => { if (card.dataset.status === 'ambiguous') addButtons(card, index); });
+  cards.forEach((card, index) => {
+    const url = card.dataset.initialSelection;
+    const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === url);
+    if (candidate) choose(card, index, candidate, url, false);
+  });
+  if (!local) toolbar.append(button('Export selections', () => {
+    const payload = {format: 'untap-manual-review-trial-v1', report_id: reportId,
+      title: document.title, selections: Object.entries(choices).map(([index, url]) => ({row: Number(index), url})),
+      pending_candidates: pendingEntries()};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = 'untap-selections.json'; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }));
+  updateAlreadyMatchedHints();
+  const importFile = document.createElement('input');
+  importFile.type = 'file'; importFile.accept = '.json,application/json'; importFile.hidden = true;
+  if (!local) toolbar.append(importFile, button('Import selections', () => importFile.click()));
+  importFile.addEventListener('change', async () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    try {
+      if (file.size > 1000000) throw new Error('File is too large.');
+      const payload = JSON.parse(await file.text());
+      if (!payload || payload.format !== 'untap-manual-review-trial-v1' ||
+          !reportId || payload.report_id !== reportId || !Array.isArray(payload.selections)) {
+        throw new Error('This is not a selections file for this exact report.');
+      }
+      const seen = new Set();
+      const importedPending = validatePending(payload.pending_candidates || []);
+      const mergedPending = new Map(pendingEntries().map(entry =>
+        [entry.item_id + ':' + parsedBeerUrl(entry.url).id, entry]));
+      importedPending.forEach(entry => mergedPending.set(
+        entry.item_id + ':' + parsedBeerUrl(entry.url).id, entry));
+      const combinedPending = validatePending(Array.from(mergedPending.values()));
+      // Validate the entire file before changing any choices.
+      const entries = payload.selections.map(entry => {
+        if (!entry || !Number.isInteger(entry.row) || seen.has(entry.row) ||
+            typeof entry.url !== 'string') throw new Error('Invalid or duplicate selection row.');
+        seen.add(entry.row);
+        const candidate = candidatesByRow[entry.row]?.find(el =>
+          el.querySelector('.beer-link')?.href === entry.url);
+        if (!candidate || !/^https:\/\/(www\.)?untappd\.com\/b\/[^/]+\/\d+\/?$/.test(entry.url)) {
+          throw new Error('A selection is not an available candidate.');
+        }
+        return {card: cards[entry.row], candidate, row: entry.row, url: entry.url};
+      });
+      entries.forEach(({card, candidate, row, url}) => {
+        if (selections.get(card) === url) return;
+        if (selections.has(card)) card.querySelector('.manual-action').click();
+        choose(card, row, candidate, url, false);
+      });
+      Object.keys(pending).forEach(key => delete pending[key]);
+      combinedPending.forEach(entry => {
+        (pending[entry.item_id] ||= []).push(entry.url);
+      });
+      pendingForms.forEach((_, card) => showPending(card));
+      persist();
+      message.textContent = 'Imported ' + entries.length + ' selections. Other choices were kept. ' + message.textContent;
+    } catch (error) {
+      message.textContent = 'Could not import selections: ' + error.message;
+    } finally { importFile.value = ''; }
+  });
+  if (storageKey && !local) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      const savedPending = JSON.parse(localStorage.getItem(storageKey + ':pending') || '{}');
+      const restoredPending = validatePending(Object.entries(savedPending).flatMap(([item_id, urls]) =>
+        urls.map(url => ({item_id, url}))));
+      restoredPending.forEach(entry => {
+        (pending[entry.item_id] ||= []).push(entry.url);
+      });
+      pendingForms.forEach((_, card) => showPending(card));
+      cards.forEach((card, index) => {
+        if (typeof saved[index] !== 'string') return;
+        const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === saved[index]);
+        if (candidate && selections.has(card) && selections.get(card) !== saved[index]) card.querySelector('.manual-action').click();
+        if (candidate) choose(card, index, candidate, saved[index], false);
+      });
+      if (selections.size) message.textContent = 'Restored your choices for this report.';
+    } catch (_) { message.textContent = 'Saved choices could not be loaded; the original report is shown.'; }
+  }
+  // Run after the report's existing handlers, including after future filter changes.
+  document.querySelectorAll('input[data-style-filter], input[data-status-filter]').forEach(el => el.addEventListener('change', () => {
+    const status = document.querySelector('input[data-status-filter]:checked')?.value || 'all';
+    const enabled = new Set(Array.from(document.querySelectorAll('input[data-style-filter]:checked'), input => input.value));
+    selections.forEach((_, card) => { card.hidden = (status !== 'all' && status !== 'ok') || (Boolean(card.dataset.styleGroup) && !enabled.has(card.dataset.styleGroup)); });
+  }));
+})();
+</script>
+</body>
+</html>
