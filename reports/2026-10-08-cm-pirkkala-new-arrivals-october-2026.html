@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="untap-report-title" content="CM Pirkkala New Arrivals - October 2026">
   <meta name="untap-report-date" content="2026-10-08">
+  <meta name="untap-source-created-at" content="2026-10-08T16:38:07.116522+00:00">
+  <meta name="untap-rebuilt-at" content="2026-10-18T08:10:04.021980+00:00">
   <meta name="untap-total-beers" content="21">
   <meta name="untap-confirmed-count" content="21">
   <meta name="untap-review-count" content="0">
   <meta name="untap-ambiguous-count" content="0">
   <meta name="untap-failed-count" content="0">
+  <meta name="untap-not-attempted-count" content="0">
+  <meta name="untap-rate-limited-count" content="0">
   <title>CM Pirkkala New Arrivals - October 2026</title>
   <style>
     :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -21,6 +25,18 @@
     h2 { margin-top: 32px; }
     h3, h4, p { margin-top: 0; }
     .summary { margin: 0; opacity: .72; }
+    #report-footer { display: grid; gap: 18px; margin-top: 32px; }
+    #report-footer:empty { display: none; }
+    .report-freshness { margin-top: 0; padding-top: 14px; border-top: 1px solid color-mix(in srgb, CanvasText 14%, transparent); font-size: .85rem; line-height: 1.5; }
+    .report-freshness dl { display: grid; gap: 6px; margin: 0; }
+    .report-freshness dl > div { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 12px; }
+    .report-freshness dt { opacity: .7; }
+    .report-freshness dd { margin: 0; font-variant-numeric: tabular-nums; }
+    .freshness-note { margin: 10px 0 0; font-size: .8rem; opacity: .65; }
+    @media (max-width: 480px) {
+      .report-freshness dl { gap: 10px; }
+      .report-freshness dl > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    }
     .style-filters { margin: 22px 0 8px; padding: 14px 16px 16px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; }
     .status-filters { margin-bottom: 0; }
     .status-filters + .style-filters { margin-top: 12px; }
@@ -90,6 +106,7 @@
     <header>
       <h1>CM Pirkkala New Arrivals - October 2026</h1>
       <p class="summary">21 beers · 21 confirmed · 0 ambiguous</p>
+      
     </header>
 
     <fieldset class="style-filters status-filters"><legend>Show</legend><div class="style-chips"><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="all" checked><span>All results</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="ambiguous"><span>Ambiguous</span></label><label class="style-chip"><input type="radio" name="status-filter" data-status-filter value="failed"><span>Failed</span></label></div></fieldset>
@@ -266,13 +283,13 @@
               </div>
             </article>
             
-            <article class="review-group" data-item-id="6d5d0b7091a224e69f956999f53c3cd9b9b2d289c187d56d87a690e07c76eb3c:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/messorem-a7y7-x-fidens-x-freestyle-hops/6807894">
+            <article class="review-group" data-item-id="6d5d0b7091a224e69f956999f53c3cd9b9b2d289c187d56d87a690e07c76eb3c:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/messorem-a7y7-x-fidens-x-freestyle-hops/6807894" data-automatic-selection="">
               <div class="review-heading">
                 <span class="status-pill">Ambiguous</span>
                 <h3>Messorem Fidens A7Y7 x Fidens - XTRM Turbo</h3>
               </div>
               <p class="meta menu-abv">Menu ABV: 7.5%</p>
-              <p class="review-reason">Match unresolved</p>
+              <p class="review-reason">Your saved selection is highlighted. Change it only if another beer matches the menu.</p>
               
               <ol class="candidate-list">
                 <li class="candidate-card has-label" data-style-group="ipa">
@@ -326,13 +343,13 @@
               </div>
             </article>
             
-            <article class="review-group" data-item-id="96db76a48981127195f25530b8fb5b71243c6804b561f8b1217fc682bbcc9848:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/adroit-theory-fast-times-at-heavy-metal-high-ghost-1330/5193417">
+            <article class="review-group" data-item-id="96db76a48981127195f25530b8fb5b71243c6804b561f8b1217fc682bbcc9848:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/adroit-theory-fast-times-at-heavy-metal-high-ghost-1330/5193417" data-automatic-selection="">
               <div class="review-heading">
                 <span class="status-pill">Ambiguous</span>
                 <h3>Adroit Theory Fast Times at Heavy Metal High</h3>
               </div>
               <p class="meta menu-abv">Menu ABV: 7.5%</p>
-              <p class="review-reason">Match unresolved</p>
+              <p class="review-reason">Your saved selection is highlighted. Change it only if another beer matches the menu.</p>
               
               <ol class="candidate-list">
                 <li class="candidate-card has-label" data-style-group="ipa">
@@ -388,13 +405,13 @@
               </div>
             </article>
             
-            <article class="review-group" data-item-id="52573e8ad575a383dca995aa438c524dd56f9adcf41396835521f3fc42872a0c:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/samuel-adams-boston-lager/4167619">
+            <article class="review-group" data-item-id="52573e8ad575a383dca995aa438c524dd56f9adcf41396835521f3fc42872a0c:1" data-status="ambiguous" data-initial-selection="https://untappd.com/b/samuel-adams-boston-lager/4167619" data-automatic-selection="">
               <div class="review-heading">
                 <span class="status-pill">Ambiguous</span>
                 <h3>Samuel Adams Boston Lager</h3>
               </div>
               <p class="meta menu-abv">Menu ABV: 5%</p>
-              <p class="review-reason">Match unresolved</p>
+              <p class="review-reason">Your saved selection is highlighted. Change it only if another beer matches the menu.</p>
               
               <ol class="candidate-list">
                 <li class="candidate-card has-label" data-style-group="lager">
@@ -426,6 +443,7 @@
             </article>
             </div>
     </section>
+    <footer id="report-footer"><section class="report-freshness" aria-label="Report freshness"><dl><div><dt>Source data saved</dt><dd><time datetime="2026-10-08T16:38:07.116522+00:00">2026-10-08 16:38 UTC</time></dd></div><div><dt>Report rebuilt</dt><dd><time datetime="2026-10-18T08:10:04.021980+00:00">2026-10-18 08:10 UTC</time></dd></div></dl><p class="freshness-note">Rebuilding a report does not fetch new ratings.</p></section></footer>
   </main>
   <dialog class="label-dialog" id="label-dialog" aria-label="Beer label preview">
     <button class="label-dialog-close" type="button" aria-label="Close label preview">×</button>
@@ -508,12 +526,12 @@
   const pendingForms = new Map();
   const original = new Map();
   const selections = new Map();
-  const candidatesByRow = cards.map(card => card.dataset.status === 'ambiguous'
+  const candidatesByRow = cards.map(card => (card.dataset.status === 'ambiguous' || card.dataset.automaticSelection)
     ? Array.from(card.querySelectorAll('.candidate-card')) : []);
-  if (!local && !cards.some(card => ['ambiguous', 'failed'].includes(card.dataset.status))) return;
+  if (!local && !cards.some(card => ['ambiguous', 'failed'].includes(card.dataset.status) || card.dataset.automaticSelection)) return;
   const styles = document.createElement('style');
   styles.textContent = `
-    .manual-toolbar { margin: 20px 0; padding: 14px; border: 1px solid GrayText; border-radius: 12px; }
+    .manual-toolbar { margin: 0; padding: 14px; border: 1px solid GrayText; border-radius: 12px; }
     .manual-toolbar p { margin-bottom: 8px; overflow-wrap: anywhere; }
     .manual-action { font: inherit; padding: 7px 12px; border: 1px solid GrayText; border-radius: 8px; color: CanvasText; background: Canvas; cursor: pointer; margin: 6px 6px 0 0; }
     .manual-action:focus-visible { outline: 3px solid LinkText; outline-offset: 3px; }
@@ -529,7 +547,7 @@
   toolbar.className = 'manual-toolbar';
   const explanation = document.createElement('p');
   explanation.textContent = 'Personal review — choices apply only in this browser. They do not change the shared report or CSV, or affect other visitors. Export selections to keep a record.';
-  if (local) explanation.textContent = 'Local review — URL additions fetch from Untappd immediately. Confirm your choices, then Save reviewed run to create new HTML, CSV and JSON. The source and published reports stay unchanged.';
+  if (local) explanation.textContent = 'Local review — URL additions fetch from Untappd immediately. Confirm your choices, then Save reviewed run to create new HTML and JSON. The source and published reports stay unchanged.';
   const message = document.createElement('p');
   message.setAttribute('role', 'status');
   toolbar.append(explanation, message);
@@ -537,7 +555,10 @@
   if (local) window.addEventListener('beforeunload', event => {
     if (dirty || busy) { event.preventDefault(); event.returnValue = ''; }
   });
-  document.querySelector('header').after(toolbar);
+  toolbar.setAttribute('aria-label', 'Review actions');
+  const footer = document.querySelector('#report-footer');
+  if (footer) footer.prepend(toolbar);
+  else document.querySelector('main').append(toolbar);
   const button = (text, action) => {
     const el = document.createElement('button');
     el.type = 'button'; el.className = 'manual-action'; el.textContent = text;
@@ -553,10 +574,12 @@
   let reportId = null;
   let storageKey = null;
   try {
-    const bytes = new TextEncoder().encode(list.innerHTML + originalSummary + document.title);
-    const hash = await crypto.subtle.digest('SHA-256', bytes);
-    reportId = document.querySelector('meta[name="untap-selection-report-id"]')?.content ||
-      Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('');
+    reportId = document.querySelector('meta[name="untap-selection-report-id"]')?.content;
+    if (!reportId) {
+      const bytes = new TextEncoder().encode(list.innerHTML + originalSummary + document.title);
+      const hash = await crypto.subtle.digest('SHA-256', bytes);
+      reportId = Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('');
+    }
     storageKey = 'untap-review-v1:' + reportId;
   } catch (_) {
     message.textContent = 'Browser saving is unavailable here. Export your selections before closing.';
@@ -597,7 +620,7 @@
     }).forEach(card => list.append(card));
     const count = status => cards.filter(card => card.dataset.status === status).length;
     const other = cards.length - count('ok') - count('ambiguous') - count('failed');
-    summary.textContent = `${cards.length} beers · ${count('ok')} confirmed (${selections.size} manually) · ${count('ambiguous')} ambiguous` +
+    summary.textContent = `${cards.length} beers · ${count('ok')} confirmed (${Object.keys(choices).length} manually) · ${count('ambiguous')} ambiguous` +
       (count('failed') ? ` · ${count('failed')} failed` : '') + (other ? ` · ${other} unresolved` : '');
     // Existing filtering handlers retain references to the original group elements.
     const all = document.querySelector('input[data-status-filter]:checked');
@@ -734,7 +757,7 @@
     card.classList.add('manual-flash');
     setTimeout(() => card.classList.remove('manual-flash'), 1500);
   }
-  function choose(card, index, candidate, url, interactive = true) {
+  function choose(card, index, candidate, url, interactive = true, automatic = false) {
     if (selections.has(card)) return;
     original.set(card, {nodes: Array.from(card.childNodes), className: card.className});
     card.replaceChildren();
@@ -745,9 +768,10 @@
     const nodes = Array.from(candidate.childNodes);
     nodes.forEach(node => card.append(node));
     const content = card.lastElementChild;
-    content.querySelectorAll('.manual-action, .already-matched-note').forEach(el => el.remove());
+    content.querySelectorAll('.manual-action, .already-matched-note, .automatic-choice-note').forEach(el => el.remove());
     const note = document.createElement('span'); note.className = 'manual-note manually-confirmed-tag';
-    note.textContent = 'Manually confirmed';
+    note.textContent = automatic ? '' : 'Manually confirmed';
+    note.hidden = automatic;
     const undo = button('Change selection', () => {
       note.remove(); undo.remove();
       nodes.forEach(node => candidate.append(node));
@@ -755,11 +779,24 @@
       card.replaceChildren(...previous.nodes); card.className = previous.className;
       card.dataset.status = 'ambiguous'; delete card.dataset.styleGroup;
       selections.delete(card); delete choices[index];
-      addButtons(card, index); refresh(); persist();
+      addButtons(card, index);
+      if (card.dataset.automaticSelection) {
+        const autoCandidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === card.dataset.automaticSelection);
+        card.querySelectorAll('.cancel-selection').forEach(el => el.remove());
+        const cancel = button('Cancel', () => {
+          cancel.remove();
+          choose(card, index, autoCandidate, card.dataset.automaticSelection, false, true);
+          refresh(); persist();
+        });
+        cancel.classList.add('cancel-selection');
+        card.append(cancel);
+      }
+      refresh(); if (!automatic) persist();
       focusCard(card, card.querySelector('.manual-action'));
     });
     content.append(undo, note);
-    selections.set(card, url); choices[index] = url;
+    selections.set(card, url);
+    if (!automatic) choices[index] = url;
     refresh();
     if (interactive) { persist(); focusCard(card, undo); }
   }
@@ -770,14 +807,18 @@
       if (!link) return;
       const url = new URL(link.href);
       if (url.protocol !== 'https:' || !['untappd.com', 'www.untappd.com'].includes(url.hostname) || !/\/b\/[^/]+\/\d+\/?$/.test(url.pathname)) return;
+      if (card.dataset.automaticSelection === url.href && !candidate.querySelector('.automatic-choice-note')) {
+        const label = document.createElement('p'); label.className = 'manual-note automatic-choice-note';
+        label.textContent = 'Automatic selection'; candidate.lastElementChild.append(label);
+      }
       candidate.lastElementChild.append(button('Confirm this beer', () => choose(card, index, candidate, url.href)));
     });
   }
-  cards.forEach((card, index) => { if (card.dataset.status === 'ambiguous') addButtons(card, index); });
+  cards.forEach((card, index) => { if (card.dataset.status === 'ambiguous' || card.dataset.automaticSelection) addButtons(card, index); });
   cards.forEach((card, index) => {
     const url = card.dataset.initialSelection;
     const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === url);
-    if (candidate) choose(card, index, candidate, url, false);
+    if (candidate) choose(card, index, candidate, url, false, Boolean(card.dataset.automaticSelection));
   });
   if (!local) toolbar.append(button('Export selections', () => {
     const payload = {format: 'untap-manual-review-trial-v1', report_id: reportId,
@@ -822,7 +863,7 @@
         return {card: cards[entry.row], candidate, row: entry.row, url: entry.url};
       });
       entries.forEach(({card, candidate, row, url}) => {
-        if (selections.get(card) === url) return;
+        if (choices[row] === url) return;
         if (selections.has(card)) card.querySelector('.manual-action').click();
         choose(card, row, candidate, url, false);
       });
@@ -850,10 +891,10 @@
       cards.forEach((card, index) => {
         if (typeof saved[index] !== 'string') return;
         const candidate = candidatesByRow[index].find(el => el.querySelector('.beer-link')?.href === saved[index]);
-        if (candidate && selections.has(card) && selections.get(card) !== saved[index]) card.querySelector('.manual-action').click();
+        if (candidate && selections.has(card) && choices[index] !== saved[index]) card.querySelector('.manual-action').click();
         if (candidate) choose(card, index, candidate, saved[index], false);
       });
-      if (selections.size) message.textContent = 'Restored your choices for this report.';
+      if (Object.keys(choices).length) message.textContent = 'Restored your choices for this report.';
     } catch (_) { message.textContent = 'Saved choices could not be loaded; the original report is shown.'; }
   }
   // Run after the report's existing handlers, including after future filter changes.
